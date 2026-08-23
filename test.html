@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Testseite</title>
+<style>
+  body{font-family:-apple-system,system-ui,"Segoe UI",sans-serif;background:#EEF1F3;color:#16232B;
+       margin:0;padding:24px;line-height:1.5}
+  .wrap{max-width:560px;margin:0 auto}
+  h1{font-size:20px;margin:0 0 4px}
+  .sub{color:#5A6B75;font-size:13px;margin:0 0 22px}
+  .row{background:#fff;border:1px solid #D6DCE0;border-radius:4px;padding:13px 15px;margin-bottom:8px}
+  .row b{display:block;font-size:13px;color:#5A6B75;font-weight:500;margin-bottom:3px}
+  .val{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;word-break:break-all}
+  .ok{color:#3F7A4B}.bad{color:#A6392C}
+  button{font:inherit;padding:11px 16px;border:1px solid #0E5A66;background:#0E5A66;color:#fff;
+         border-radius:4px;margin-top:6px}
+  .note{font-size:13px;color:#5A6B75;margin-top:18px}
+</style>
+
+<div class="wrap">
+  <h1>Testseite Vokabeltrainer</h1>
+  <p class="sub">Wenn du diese Zeile siehst, liefert der Server die Datei aus.</p>
+
+  <div class="row"><b>1 — JavaScript</b><span class="val" id="js" class="bad">läuft NICHT</span></div>
+  <div class="row"><b>2 — Dauerhafter Speicher (Lernstand)</b><span class="val" id="ls">…</span></div>
+  <div class="row"><b>3 — Sprachausgabe</b><span class="val" id="sp">…</span></div>
+  <div class="row"><b>4 — Schriften aus dem Netz</b><span class="val" id="fo">…</span></div>
+  <div class="row"><b>5 — Adresse</b><span class="val" id="url">…</span></div>
+  <div class="row"><b>6 — Browser</b><span class="val" id="ua">…</span></div>
+
+  <button id="btn">Speicher-Test wiederholen</button>
+  <p class="note">Erwartet: Punkt 1 und 2 grün. Punkt 3 und 4 sind Komfort, kein Muss.
+     Beim zweiten Aufruf der Seite muss Punkt 2 einen Zähler grösser als 1 zeigen —
+     erst dann ist der Speicher wirklich dauerhaft.</p>
+</div>
+
+<script>
+function set(id, text, good){
+  var el = document.getElementById(id);
+  el.textContent = text;
+  el.className = "val " + (good ? "ok" : "bad");
+}
+
+set("js", "läuft", true);
+
+function testStore(){
+  try{
+    var n = Number(localStorage.getItem("testzaehler") || 0) + 1;
+    localStorage.setItem("testzaehler", String(n));
+    set("ls", "funktioniert — Seitenaufruf Nr. " + n, n > 0);
+  }catch(e){
+    set("ls", "NICHT verfügbar (" + e.name + ") — Lernstand ginge verloren", false);
+  }
+}
+testStore();
+document.getElementById("btn").onclick = testStore;
+
+try{
+  var v = window.speechSynthesis ? window.speechSynthesis.getVoices().length : -1;
+  if(v < 0) set("sp", "nicht unterstützt", false);
+  else set("sp", "unterstützt, " + v + " Stimmen geladen", true);
+}catch(e){ set("sp", "Fehler: " + e.message, false); }
+
+try{
+  if(document.fonts && document.fonts.ready){
+    document.fonts.ready.then(function(){ set("fo", "Schriften geladen", true); });
+  }else set("fo", "nicht prüfbar (unkritisch)", true);
+}catch(e){ set("fo", "nicht prüfbar (unkritisch)", true); }
+
+set("url", location.href, location.protocol.indexOf("http") === 0);
+set("ua", navigator.userAgent, true);
+
+window.onerror = function(m, s, l, c){
+  set("js", "Fehler: " + m + " (Zeile " + l + ")", false);
+  return false;
+};
+</script>

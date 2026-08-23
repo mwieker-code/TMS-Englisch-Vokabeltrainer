@@ -1,0 +1,2847 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vokabeltrainer Englisch – Oberstufe</title>
+<script>
+/* Faengt Fehler ab, die sonst zu einer leeren Seite fuehren, und zeigt sie an. */
+window.onerror = function(msg, src, line, col){
+  try{
+    var box = document.getElementById("warn");
+    if(!box){
+      box = document.createElement("div");
+      box.id = "warn";
+      document.body.insertBefore(box, document.body.firstChild);
+    }
+    box.innerHTML = '<div class="warn"><b>Diese Seite laeuft in deinem Browser nicht.</b><br>'
+      + 'Wahrscheinlich ist er zu alt fuer eine der verwendeten Funktionen. '
+      + 'Bitte diesen Text weitergeben:<br><span style="font-family:monospace;font-size:11px">'
+      + String(msg) + ' (Zeile ' + line + ':' + col + ')</span></div>';
+  }catch(e){}
+  return false;
+};
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --ground:#EEF1F3;
+  --card:#FFFFFF;
+  --ink:#16232B;
+  --ink-soft:#5A6B75;
+  --rule:#D6DCE0;
+  --petrol:#0E5A66;
+  --amber:#C9761E;
+  --moss:#3F7A4B;
+  --sans:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --mono:"JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace;
+  --r:4px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--ground);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:16px;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:760px;margin:0 auto;padding:24px 20px 64px}
+
+/* ---------- Kopfzeile ---------- */
+.masthead{display:flex;align-items:baseline;justify-content:space-between;gap:16px;
+  border-bottom:2px solid var(--ink);padding-bottom:10px;margin-bottom:28px;flex-wrap:wrap}
+.masthead h1{font-family:var(--serif);font-weight:600;font-size:24px;margin:0;letter-spacing:-.01em}
+.masthead .sub{font-family:var(--mono);font-size:11px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-soft)}
+
+/* ---------- Startseite ---------- */
+.yeargroup{margin-bottom:34px}
+.yearhead{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.yearhead .tag{font-family:var(--mono);font-size:12px;background:var(--ink);color:var(--ground);
+  padding:2px 7px;border-radius:2px}
+.yearhead .name{font-family:var(--serif);font-size:17px;font-style:italic;color:var(--ink-soft)}
+
+.topic{display:block;width:100%;text-align:left;background:var(--card);border:1px solid var(--rule);
+  border-left:3px solid var(--rule);border-radius:var(--r);padding:13px 15px;margin-bottom:8px;
+  cursor:pointer;font:inherit;color:inherit;transition:border-color .15s,transform .15s}
+.topic:hover{border-left-color:var(--petrol);transform:translateX(2px)}
+.topic:focus-visible{outline:2px solid var(--petrol);outline-offset:2px}
+.topic .t-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.topic .t-name{font-weight:500}
+.topic .t-count{font-family:var(--mono);font-size:12px;color:var(--ink-soft);white-space:nowrap}
+.topic .t-due{color:var(--amber)}
+.minirail{display:flex;gap:2px;margin-top:9px}
+.minirail i{height:4px;flex:1;background:var(--rule);border-radius:1px}
+.minirail i.f{background:var(--petrol)}
+
+.emptyhint{background:var(--card);border:1px dashed var(--rule);border-radius:var(--r);
+  padding:14px 16px;color:var(--ink-soft);font-size:14px}
+
+/* ---------- Sitzung: Leitner-Schiene (Signature) ---------- */
+.rail{display:flex;gap:6px;margin-bottom:22px}
+.slot{flex:1;background:var(--card);border:1px solid var(--rule);border-radius:var(--r);
+  padding:7px 6px 6px;text-align:center;position:relative;transition:border-color .2s,background .2s}
+.slot .n{font-family:var(--mono);font-size:10px;color:var(--ink-soft);letter-spacing:.06em}
+.slot .c{font-family:var(--serif);font-size:19px;line-height:1.1;margin-top:1px}
+.slot .iv{font-family:var(--mono);font-size:9px;color:var(--ink-soft);margin-top:2px}
+.slot.here{border-color:var(--petrol);background:#E7F0F1}
+.slot.here::after{content:"";position:absolute;left:50%;bottom:-7px;width:8px;height:8px;
+  transform:translateX(-50%) rotate(45deg);background:#E7F0F1;
+  border-right:1px solid var(--petrol);border-bottom:1px solid var(--petrol)}
+.slot.land{animation:land .45s ease-out}
+@keyframes land{0%{transform:translateY(-6px)}60%{transform:translateY(2px)}100%{transform:none}}
+
+/* ---------- Karte ---------- */
+.stage{position:relative}
+.vcard{background:var(--card);border:1px solid var(--rule);border-radius:var(--r);
+  padding:30px 26px;min-height:250px;display:flex;flex-direction:column;
+  box-shadow:0 1px 0 var(--rule),0 6px 22px rgba(22,35,43,.06)}
+.vcard.deal{animation:deal .28s ease-out}
+@keyframes deal{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+.eyebrow{display:flex;justify-content:space-between;gap:12px;font-family:var(--mono);font-size:11px;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);
+  border-bottom:1px solid var(--rule);padding-bottom:8px;margin-bottom:20px}
+.prompt{font-family:var(--serif);font-size:38px;line-height:1.15;letter-spacing:-.015em;margin:0}
+.pos{font-family:var(--serif);font-style:italic;color:var(--ink-soft);font-size:15px;margin-top:5px}
+.phon{display:flex;align-items:center;gap:10px;margin-top:7px;flex-wrap:wrap}
+.ipa{font-family:var(--mono);font-size:13px;color:var(--ink-soft);letter-spacing:.01em}
+.speak{padding:5px 9px;line-height:0;border-color:var(--rule);color:var(--petrol)}
+.speak:hover{border-color:var(--petrol);background:#E7F0F1}
+.speak svg{width:15px;height:15px;display:block}
+.speak.on{background:var(--petrol);border-color:var(--petrol);color:#fff}
+.answer{margin-top:20px;padding-top:18px;border-top:1px solid var(--rule)}
+.answer .de{font-family:var(--serif);font-size:23px}
+.answer .coll{font-size:13px;color:var(--ink-soft);margin-top:8px}
+.answer .ex{font-family:var(--serif);font-style:italic;font-size:16px;margin-top:14px;
+  padding-left:12px;border-left:2px solid var(--petrol);color:#31434D}
+.answer .ex b{font-style:normal;font-weight:600;color:var(--ink);
+  box-shadow:inset 0 -.42em 0 rgba(14,90,102,.14)}
+.answer .ex .speak{margin-left:8px;vertical-align:middle;padding:4px 7px}
+.answer .ex .speak svg{width:13px;height:13px}
+.spacer{flex:1}
+
+/* ---------- Bedienelemente ---------- */
+.controls{margin-top:16px;display:flex;gap:8px;flex-wrap:wrap}
+button{font:inherit;cursor:pointer;border-radius:var(--r);border:1px solid var(--rule);
+  background:var(--card);color:var(--ink);padding:11px 15px;transition:background .15s,border-color .15s}
+button:hover{border-color:var(--ink-soft)}
+button:focus-visible{outline:2px solid var(--petrol);outline-offset:2px}
+button.primary{background:var(--petrol);border-color:var(--petrol);color:#fff;flex:1}
+button.primary:hover{background:#0B4A54}
+.rate{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 8px}
+.rate span{font-family:var(--mono);font-size:10px;color:var(--ink-soft);letter-spacing:.05em}
+.rate.again{border-color:var(--amber);color:var(--amber)}
+.rate.again:hover{background:#FBF2E6}
+.rate.hard{border-color:var(--ink-soft)}
+.rate.hard:hover{background:#EEF1F3}
+.rate.good{border-color:var(--moss);color:var(--moss)}
+.rate.good:hover{background:#EDF4EE}
+
+.opts{display:grid;gap:8px;margin-top:20px}
+.opt{text-align:left;padding:13px 15px;font-family:var(--serif);font-size:17px}
+.opt.right{border-color:var(--moss);background:#EDF4EE;color:var(--moss)}
+.opt.wrong{border-color:var(--amber);background:#FBF2E6;color:var(--amber)}
+.opt:disabled{cursor:default;opacity:1}
+
+.typebox{margin-top:20px}
+.typebox input{width:100%;font-family:var(--serif);font-size:22px;padding:12px 14px;
+  border:1px solid var(--rule);border-radius:var(--r);background:var(--ground);color:var(--ink)}
+.typebox input:focus{outline:2px solid var(--petrol);outline-offset:1px;background:var(--card)}
+.verdict{margin-top:12px;font-size:14px}
+.verdict.ok{color:var(--moss)}
+.verdict.near{color:var(--amber)}
+.verdict.no{color:var(--amber)}
+.verdict .sol{font-family:var(--serif);font-size:18px;color:var(--ink);display:block;margin-top:3px}
+
+/* ---------- Kopf der Sitzung ---------- */
+.sessionbar{display:flex;justify-content:space-between;align-items:center;gap:12px;
+  margin-bottom:18px;flex-wrap:wrap}
+.linkbtn{background:none;border:none;padding:4px 0;color:var(--petrol);text-decoration:underline;
+  text-underline-offset:3px}
+.switches{display:flex;gap:6px;flex-wrap:wrap}
+.switch{font-family:var(--mono);font-size:11px;letter-spacing:.05em;padding:6px 9px;
+  text-transform:uppercase}
+.switch[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--ground)}
+
+/* ---------- Abschluss ---------- */
+.done{background:var(--card);border:1px solid var(--rule);border-radius:var(--r);padding:34px 26px;text-align:center}
+.done h2{font-family:var(--serif);font-weight:600;font-size:26px;margin:0 0 8px}
+.done p{color:var(--ink-soft);margin:0 0 20px}
+
+/* ---------- Fußzeile ---------- */
+.foot{margin-top:40px;padding-top:14px;border-top:1px solid var(--rule);
+  display:flex;gap:16px;flex-wrap:wrap;align-items:center;
+  font-family:var(--mono);font-size:11px;color:var(--ink-soft);letter-spacing:.04em}
+.foot button{padding:5px 9px;font-family:var(--mono);font-size:11px}
+.warn{background:#FBF2E6;border:1px solid var(--amber);color:#8A4E12;border-radius:var(--r);
+  padding:9px 12px;font-size:13px;margin-bottom:20px;line-height:1.4}
+
+@media(max-width:560px){
+  .prompt{font-size:30px}
+  .slot .c{font-size:16px}
+  .slot .iv{display:none}
+  .vcard{padding:22px 18px}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+}
+</style>
+
+<div class="wrap">
+  <div class="masthead">
+    <h1>Vokabeltrainer Englisch</h1>
+    <div class="sub">Oberstufe · Korridorthemen</div>
+  </div>
+  <div id="warn"></div>
+  <div id="view"></div>
+  <div class="foot">
+    <span id="footstat"></span>
+    <button id="exportBtn">Fortschritt sichern</button>
+    <button id="importBtn">Fortschritt laden</button>
+    <input type="file" id="importFile" accept="application/json" hidden>
+  </div>
+</div>
+
+<script>
+/* =========================================================================
+   VOKABELDATEN
+   Alles steckt in dieser Datei. Zum Aendern: Eintrag im passenden Thema
+   ergaenzen oder korrigieren. Pflichtfelder sind id, en, de, pos.
+   Optional: ipa, collocations, example_en, distractor_hint.
+   ========================================================================= */
+const TOPICS = [
+ {
+  "id": "e-digital",
+  "year": "E",
+  "yearName": "Global Challenges",
+  "name": "The digital age / social media / technology"
+ },
+ {
+  "id": "e-health",
+  "year": "E",
+  "yearName": "Global Challenges",
+  "name": "Health"
+ },
+ {
+  "id": "e-sustain",
+  "year": "E",
+  "yearName": "Global Challenges",
+  "name": "Working towards sustainability"
+ },
+ {
+  "id": "e-intrel",
+  "year": "E",
+  "yearName": "Global Challenges",
+  "name": "International relations (conflict and cooperation) / MUNOL"
+ },
+ {
+  "id": "e-current",
+  "year": "E",
+  "yearName": "Global Challenges",
+  "name": "Current issues"
+ },
+ {
+  "id": "q1-empire",
+  "year": "Q1",
+  "yearName": "Politics, culture, society – between tradition and change (UK)",
+  "name": "The British Empire"
+ },
+ {
+  "id": "q1-postcol",
+  "year": "Q1",
+  "yearName": "Politics, culture, society – between tradition and change (UK)",
+  "name": "Postcolonial Britain"
+ },
+ {
+  "id": "q1-identity",
+  "year": "Q1",
+  "yearName": "Politics, culture, society – between tradition and change (UK)",
+  "name": "Questions of identity of British people"
+ },
+ {
+  "id": "q1-develop",
+  "year": "Q1",
+  "yearName": "Politics, culture, society – between tradition and change (UK)",
+  "name": "Political, cultural and social developments in the UK"
+ },
+ {
+  "id": "q1-eliz",
+  "year": "Q1",
+  "yearName": "Politics, culture, society – between tradition and change (UK)",
+  "name": "The Elizabethan Age and Shakespeare"
+ },
+ {
+  "id": "q2-life",
+  "year": "Q2",
+  "yearName": "The Individual and Society",
+  "name": "Concepts of life: identity, nonconformity, values"
+ },
+ {
+  "id": "q2-trends",
+  "year": "Q2",
+  "yearName": "The Individual and Society",
+  "name": "Social trends: communication, fake realities, influencers, online dating"
+ },
+ {
+  "id": "q2-teen",
+  "year": "Q2",
+  "yearName": "The Individual and Society",
+  "name": "Teen issues: peer pressure, bullying, addiction, depression"
+ },
+ {
+  "id": "q2-diversity",
+  "year": "Q2",
+  "yearName": "The Individual and Society",
+  "name": "Diversity issues: ethnic & cultural, discrimination, disabilities"
+ },
+ {
+  "id": "q2-gender",
+  "year": "Q2",
+  "yearName": "The Individual and Society",
+  "name": "Gender issues: gender roles, discrimination, career options"
+ },
+ {
+  "id": "q2-future",
+  "year": "Q2",
+  "yearName": "The Individual and Society",
+  "name": "Shaping the future"
+ },
+ {
+  "id": "q2-abroad",
+  "year": "Q2",
+  "yearName": "The Individual and Society",
+  "name": "Going abroad, volunteering and education"
+ },
+ {
+  "id": "general-academic",
+  "year": "ALL",
+  "yearName": "Jahrgangsübergreifend",
+  "name": "Academic & essay language"
+ }
+];
+
+const SETS = {
+ "e-digital": [
+  {
+   "id": "dig-01",
+   "en": "to curate",
+   "de": "kuratieren, gezielt zusammenstellen",
+   "pos": "verb",
+   "ipa": "kjʊəˈreɪt",
+   "collocations": "to curate a feed / an online persona",
+   "example_en": "Users carefully curate the version of themselves they present online."
+  },
+  {
+   "id": "dig-02",
+   "en": "echo chamber",
+   "de": "Echokammer",
+   "pos": "noun",
+   "ipa": "ˈekəʊ ˌtʃeɪmbə",
+   "collocations": "to live in an echo chamber",
+   "example_en": "Recommendation algorithms can trap readers in an echo chamber of familiar opinions."
+  },
+  {
+   "id": "dig-03",
+   "en": "to blur the line",
+   "de": "die Grenze verwischen",
+   "pos": "phrase",
+   "ipa": "blɜː ðə ˈlaɪn",
+   "collocations": "to blur the line between X and Y",
+   "example_en": "Filters blur the line between documentation and fiction."
+  },
+  {
+   "id": "dig-04",
+   "en": "surveillance",
+   "de": "Überwachung",
+   "pos": "noun",
+   "ipa": "səˈveɪləns",
+   "collocations": "mass / state surveillance",
+   "example_en": "Critics warn that constant surveillance changes how people behave in public."
+  },
+  {
+   "id": "dig-05",
+   "en": "to opt out",
+   "de": "sich abmelden, nicht teilnehmen",
+   "pos": "phrasal verb",
+   "ipa": "ɒpt ˈaʊt",
+   "collocations": "to opt out of a service",
+   "example_en": "Teenagers who opt out of social media often feel excluded from their peer group."
+  },
+  {
+   "id": "dig-06",
+   "en": "detrimental",
+   "de": "schädlich, abträglich",
+   "pos": "adjective",
+   "distractor_hint": [
+    {
+     "en": "determined",
+     "de": "entschlossen"
+    }
+   ],
+   "ipa": "ˌdetrɪˈmentl",
+   "collocations": "detrimental to mental health",
+   "example_en": "Excessive screen time is detrimental to concentration."
+  },
+  {
+   "id": "dig-07",
+   "en": "to substantiate",
+   "de": "belegen, untermauern",
+   "pos": "verb",
+   "distractor_hint": [
+    "dig-12",
+    {
+     "en": "to substitute",
+     "de": "ersetzen"
+    }
+   ],
+   "ipa": "səbˈstænʃieɪt",
+   "collocations": "to substantiate a claim",
+   "example_en": "The author fails to substantiate her claim with reliable data."
+  },
+  {
+   "id": "dig-08",
+   "en": "digital divide",
+   "de": "digitale Kluft",
+   "pos": "noun",
+   "ipa": "ˌdɪdʒɪtl dɪˈvaɪd",
+   "collocations": "to bridge the digital divide",
+   "example_en": "The pandemic exposed the digital divide between wealthy and poorer households."
+  },
+  {
+   "id": "dig-09",
+   "en": "to monetise",
+   "de": "zu Geld machen, monetarisieren",
+   "pos": "verb",
+   "ipa": "ˈmʌnɪtaɪz",
+   "collocations": "to monetise attention / content",
+   "example_en": "Platforms monetise every second of attention they capture."
+  },
+  {
+   "id": "dig-10",
+   "en": "unprecedented",
+   "de": "beispiellos, noch nie dagewesen",
+   "pos": "adjective",
+   "distractor_hint": [
+    {
+     "en": "unforeseen",
+     "de": "unvorhergesehen"
+    }
+   ],
+   "ipa": "ʌnˈpresɪdentɪd",
+   "collocations": "on an unprecedented scale",
+   "example_en": "Data is now collected on an unprecedented scale."
+  },
+  {
+   "id": "dig-11",
+   "en": "to be susceptible to",
+   "de": "anfällig sein für",
+   "pos": "phrase",
+   "ipa": "səˈseptəbl",
+   "collocations": "susceptible to manipulation",
+   "example_en": "Younger users are particularly susceptible to targeted advertising."
+  },
+  {
+   "id": "dig-12",
+   "en": "accountability",
+   "de": "Rechenschaftspflicht, Verantwortlichkeit",
+   "pos": "noun",
+   "ipa": "əˌkaʊntəˈbɪləti",
+   "collocations": "to demand accountability from",
+   "example_en": "Lawmakers demand greater accountability from technology companies."
+  }
+ ],
+ "e-health": [
+  {
+   "id": "hea-01",
+   "en": "to alleviate",
+   "de": "lindern, abmildern",
+   "pos": "verb",
+   "distractor_hint": [
+    {
+     "en": "to aggravate",
+     "de": "verschlimmern"
+    },
+    {
+     "en": "to allocate",
+     "de": "zuteilen"
+    }
+   ],
+   "ipa": "əˈliːvieɪt",
+   "collocations": "to alleviate pain / pressure",
+   "example_en": "Regular exercise can alleviate the symptoms of anxiety."
+  },
+  {
+   "id": "hea-02",
+   "en": "life expectancy",
+   "de": "Lebenserwartung",
+   "pos": "noun",
+   "ipa": "laɪf ɪkˈspektənsi",
+   "collocations": "rising / falling life expectancy",
+   "example_en": "Life expectancy still differs sharply between postcodes."
+  },
+  {
+   "id": "hea-03",
+   "en": "sedentary",
+   "de": "sitzend, bewegungsarm",
+   "pos": "adjective",
+   "ipa": "ˈsedntri",
+   "collocations": "a sedentary lifestyle",
+   "example_en": "A sedentary lifestyle raises the risk of cardiovascular disease."
+  },
+  {
+   "id": "hea-04",
+   "en": "to be entitled to",
+   "de": "Anspruch haben auf",
+   "pos": "phrase",
+   "ipa": "ɪnˈtaɪtld",
+   "collocations": "entitled to free treatment",
+   "example_en": "Every resident is entitled to free treatment under the NHS."
+  },
+  {
+   "id": "hea-05",
+   "en": "stigma",
+   "de": "Stigma, Brandmarkung",
+   "pos": "noun",
+   "ipa": "ˈstɪɡmə",
+   "collocations": "the stigma surrounding mental illness",
+   "example_en": "The stigma surrounding therapy keeps many people from asking for help."
+  },
+  {
+   "id": "hea-06",
+   "en": "to prioritise",
+   "de": "Vorrang geben, priorisieren",
+   "pos": "verb",
+   "ipa": "praɪˈɒrətaɪz",
+   "collocations": "to prioritise prevention over treatment",
+   "example_en": "The report urges governments to prioritise prevention over treatment."
+  },
+  {
+   "id": "hea-07",
+   "en": "strain",
+   "de": "Belastung, Druck",
+   "pos": "noun",
+   "distractor_hint": [
+    {
+     "en": "stress",
+     "de": "Stress"
+    },
+    {
+     "en": "sprain",
+     "de": "Verstauchung"
+    }
+   ],
+   "ipa": "streɪn",
+   "collocations": "to put a strain on the system",
+   "example_en": "An ageing population puts a strain on the health service."
+  },
+  {
+   "id": "hea-08",
+   "en": "resilience",
+   "de": "Widerstandsfähigkeit",
+   "pos": "noun",
+   "ipa": "rɪˈzɪliəns",
+   "collocations": "to build resilience",
+   "example_en": "Schools increasingly try to build resilience rather than react to crises."
+  }
+ ],
+ "e-sustain": [
+  {
+   "id": "sus-01",
+   "en": "to offset",
+   "de": "ausgleichen, kompensieren",
+   "pos": "verb",
+   "distractor_hint": [
+    {
+     "en": "to onset",
+     "de": "Beginn"
+    },
+    {
+     "en": "to outset",
+     "de": "Anfang"
+    }
+   ],
+   "ipa": "ˈɒfset",
+   "collocations": "to offset carbon emissions",
+   "example_en": "Airlines offer passengers the option to offset their emissions."
+  },
+  {
+   "id": "sus-02",
+   "en": "depletion",
+   "de": "Erschöpfung, Aufzehrung",
+   "pos": "noun",
+   "ipa": "dɪˈpliːʃn",
+   "collocations": "the depletion of natural resources",
+   "example_en": "The depletion of groundwater threatens entire regions."
+  },
+  {
+   "id": "sus-03",
+   "en": "to phase out",
+   "de": "schrittweise abschaffen",
+   "pos": "phrasal verb",
+   "ipa": "feɪz ˈaʊt",
+   "collocations": "to phase out fossil fuels",
+   "example_en": "The government pledged to phase out coal by the end of the decade."
+  },
+  {
+   "id": "sus-04",
+   "en": "viable",
+   "de": "tragfähig, machbar",
+   "pos": "adjective",
+   "ipa": "ˈvaɪəbl",
+   "collocations": "an economically viable alternative",
+   "example_en": "Wind power has become an economically viable alternative."
+  },
+  {
+   "id": "sus-05",
+   "en": "stewardship",
+   "de": "verantwortungsvoller Umgang, Treuhänderschaft",
+   "pos": "noun",
+   "ipa": "ˈstjuːədʃɪp",
+   "collocations": "environmental stewardship",
+   "example_en": "The company presents itself as a model of environmental stewardship."
+  },
+  {
+   "id": "sus-06",
+   "en": "to lag behind",
+   "de": "hinterherhinken",
+   "pos": "phrasal verb",
+   "ipa": "læɡ bɪˈhaɪnd",
+   "collocations": "to lag behind its targets",
+   "example_en": "Germany still lags behind its own climate targets."
+  }
+ ],
+ "q1-empire": [
+  {
+   "id": "emp-01",
+   "en": "to subjugate",
+   "de": "unterwerfen",
+   "pos": "verb",
+   "ipa": "ˈsʌbdʒʊɡeɪt",
+   "collocations": "to subjugate a population",
+   "example_en": "Colonial administrators subjugated local rulers through treaties and force."
+  },
+  {
+   "id": "emp-02",
+   "en": "indigenous",
+   "de": "einheimisch, indigen",
+   "pos": "adjective",
+   "ipa": "ɪnˈdɪdʒənəs",
+   "collocations": "indigenous population / knowledge",
+   "example_en": "Indigenous land rights were rarely recognised by the colonial courts."
+  },
+  {
+   "id": "emp-03",
+   "en": "exploitation",
+   "de": "Ausbeutung",
+   "pos": "noun",
+   "distractor_hint": [
+    {
+     "en": "exploration",
+     "de": "Erkundung, Erforschung"
+    }
+   ],
+   "ipa": "ˌeksplɔɪˈteɪʃn",
+   "collocations": "the exploitation of resources / labour",
+   "example_en": "The wealth of the port cities rested on the exploitation of distant colonies."
+  },
+  {
+   "id": "emp-04",
+   "en": "to justify",
+   "de": "rechtfertigen",
+   "pos": "verb",
+   "ipa": "ˈdʒʌstɪfaɪ",
+   "collocations": "to justify imperial rule",
+   "example_en": "Missionaries were used to justify imperial rule as a civilising mission."
+  },
+  {
+   "id": "emp-05",
+   "en": "legacy",
+   "de": "Erbe, Hinterlassenschaft",
+   "pos": "noun",
+   "distractor_hint": [
+    {
+     "en": "legitimacy",
+     "de": "Legitimität"
+    },
+    {
+     "en": "delegacy",
+     "de": "Abordnung"
+    }
+   ],
+   "ipa": "ˈleɡəsi",
+   "collocations": "the legacy of empire",
+   "example_en": "The legacy of empire is still visible in Britain's cities."
+  },
+  {
+   "id": "emp-06",
+   "en": "to dismantle",
+   "de": "abbauen, auflösen",
+   "pos": "verb",
+   "ipa": "dɪsˈmæntl",
+   "collocations": "to dismantle an empire",
+   "example_en": "Britain dismantled its empire far more quickly than it had built it."
+  }
+ ],
+ "q2-teen": [
+  {
+   "id": "tee-01",
+   "en": "peer pressure",
+   "de": "Gruppenzwang",
+   "pos": "noun",
+   "ipa": "ˈpɪə ˌpreʃə",
+   "collocations": "to give in to peer pressure",
+   "example_en": "Few admit how often they give in to peer pressure."
+  },
+  {
+   "id": "tee-02",
+   "en": "to belittle",
+   "de": "herabsetzen, kleinmachen",
+   "pos": "verb",
+   "distractor_hint": [
+    {
+     "en": "to belie",
+     "de": "Lügen strafen"
+    },
+    {
+     "en": "to belong",
+     "de": "gehören zu"
+    }
+   ],
+   "ipa": "bɪˈlɪtl",
+   "collocations": "to belittle someone in public",
+   "example_en": "He belittles his classmates to make himself look confident."
+  },
+  {
+   "id": "tee-03",
+   "en": "withdrawal",
+   "de": "Rückzug",
+   "pos": "noun",
+   "ipa": "wɪðˈdrɔːəl",
+   "collocations": "social withdrawal",
+   "example_en": "Social withdrawal is often the first warning sign teachers notice."
+  },
+  {
+   "id": "tee-04",
+   "en": "to cope with",
+   "de": "bewältigen, zurechtkommen mit",
+   "pos": "phrasal verb",
+   "ipa": "kəʊp wɪð",
+   "collocations": "to cope with pressure",
+   "example_en": "Not every student learns how to cope with academic pressure."
+  },
+  {
+   "id": "tee-05",
+   "en": "self-esteem",
+   "de": "Selbstwertgefühl",
+   "pos": "noun",
+   "ipa": "ˌself ɪˈstiːm",
+   "collocations": "low / fragile self-esteem",
+   "example_en": "Constant comparison online erodes fragile self-esteem."
+  },
+  {
+   "id": "tee-06",
+   "en": "bystander",
+   "de": "Zuschauer, Unbeteiligter",
+   "pos": "noun",
+   "distractor_hint": [
+    {
+     "en": "passer-by",
+     "de": "Passant"
+    },
+    {
+     "en": "outsider",
+     "de": "Außenseiter"
+    }
+   ],
+   "ipa": "ˈbaɪstændə",
+   "collocations": "a passive bystander",
+   "example_en": "Bullying continues as long as bystanders stay silent."
+  },
+  {
+   "id": "tee-07",
+   "en": "adolescence",
+   "de": "Jugend",
+   "pos": "noun",
+   "ipa": "ˌædəˈlesns",
+   "collocations": "during adolescence",
+   "example_en": "Adolescence is often described as a search rather than a stage.",
+   "distractor_hint": [
+    "tee-08"
+   ]
+  },
+  {
+   "id": "tee-08",
+   "en": "adolescent",
+   "de": "Jugendliche(r)",
+   "pos": "noun",
+   "ipa": "ˌædəˈlesnt",
+   "collocations": "a troubled adolescent",
+   "example_en": "The study followed 200 adolescents over four years.",
+   "distractor_hint": [
+    "tee-07"
+   ]
+  },
+  {
+   "id": "tee-09",
+   "en": "adult life",
+   "de": "Erwachsenenleben",
+   "pos": "noun",
+   "collocations": "to prepare sb. for adult life",
+   "example_en": "School is supposed to prepare young people for adult life."
+  },
+  {
+   "id": "tee-10",
+   "en": "the age of majority",
+   "de": "Volljährigkeit",
+   "pos": "noun",
+   "collocations": "to reach the age of majority",
+   "example_en": "In the UK the age of majority is eighteen."
+  },
+  {
+   "id": "tee-11",
+   "en": "to criticize sb./sth.",
+   "de": "jdn./etw. kritisieren",
+   "pos": "verb",
+   "ipa": "ˈkrɪtɪsaɪz",
+   "collocations": "to criticize sb. openly",
+   "example_en": "Teenagers who criticize their parents are often testing the limits of the relationship."
+  },
+  {
+   "id": "tee-12",
+   "en": "(non-)conformity",
+   "de": "(Un-)Angepasstheit (an gesellschaftliche Normen und Regeln)",
+   "pos": "noun",
+   "ipa": "kənˈfɔːməti",
+   "collocations": "pressure towards conformity",
+   "example_en": "Every youth culture claims nonconformity and produces its own conformity."
+  },
+  {
+   "id": "tee-13",
+   "en": "in conformity with sth.",
+   "de": "in Übereinstimmung mit etwas",
+   "pos": "phrase",
+   "collocations": "to act in conformity with the rules",
+   "example_en": "He acted in conformity with rules he had never agreed to."
+  },
+  {
+   "id": "tee-14",
+   "en": "deviant (behaviour)",
+   "de": "von der Norm abweichendes Verhalten",
+   "pos": "adjective",
+   "ipa": "ˈdiːviənt",
+   "collocations": "deviant behaviour",
+   "example_en": "What one generation calls deviant behaviour the next may call normal."
+  },
+  {
+   "id": "tee-15",
+   "en": "difference of opinion",
+   "de": "Meinungsverschiedenheit",
+   "pos": "noun",
+   "collocations": "a difference of opinion over sth.",
+   "example_en": "A difference of opinion about curfews turned into a week of silence."
+  },
+  {
+   "id": "tee-16",
+   "en": "grown-up (adj.)",
+   "de": "reif, erwachsen",
+   "pos": "adjective",
+   "collocations": "to behave in a grown-up way",
+   "example_en": "She was praised for her grown-up handling of the situation."
+  },
+  {
+   "id": "tee-17",
+   "en": "grown-up (n.)",
+   "de": "Erwachsene(r)",
+   "pos": "noun",
+   "collocations": "the grown-ups in the room",
+   "example_en": "The grown-ups had already decided before the meeting began."
+  },
+  {
+   "id": "tee-18",
+   "en": "to hang out",
+   "de": "mit jdm. abhängen, rumhängen",
+   "pos": "phrasal verb",
+   "collocations": "to hang out with friends",
+   "example_en": "They hang out at the same bus stop every afternoon."
+  },
+  {
+   "id": "tee-19",
+   "en": "identity",
+   "de": "Identität",
+   "pos": "noun",
+   "ipa": "aɪˈdentəti",
+   "collocations": "to form / question one's identity",
+   "example_en": "Identity is not something you find once and keep."
+  },
+  {
+   "id": "tee-20",
+   "en": "to search for one's own identity",
+   "de": "seine Identität suchen",
+   "pos": "phrase",
+   "example_en": "Adolescents search for their own identity partly by rejecting other people's."
+  },
+  {
+   "id": "tee-21",
+   "en": "mature",
+   "de": "reif, erwachsen",
+   "pos": "adjective",
+   "ipa": "məˈtʃʊə",
+   "collocations": "mature for her age",
+   "example_en": "He is remarkably mature for a fifteen-year-old."
+  },
+  {
+   "id": "tee-22",
+   "en": "peer group",
+   "de": "Altersgruppe",
+   "pos": "noun",
+   "ipa": "pɪə",
+   "collocations": "to be accepted by one's peer group",
+   "example_en": "The peer group often matters more than the family at this age."
+  },
+  {
+   "id": "tee-23",
+   "en": "pocket money / allowance",
+   "de": "Taschengeld",
+   "pos": "noun",
+   "collocations": "to spend one's pocket money",
+   "example_en": "Arguments about pocket money are rarely really about money."
+  },
+  {
+   "id": "tee-24",
+   "en": "puberty",
+   "de": "Pubertät",
+   "pos": "noun",
+   "ipa": "ˈpjuːbəti",
+   "collocations": "to go through puberty",
+   "example_en": "Puberty arrives earlier than it did a century ago.",
+   "distractor_hint": [
+    "tee-25"
+   ]
+  },
+  {
+   "id": "tee-25",
+   "en": "pubescent",
+   "de": "pubertierend",
+   "pos": "adjective",
+   "ipa": "pjuːˈbesnt",
+   "example_en": "The novel is narrated by a pubescent boy who understands more than he admits.",
+   "distractor_hint": [
+    "tee-24"
+   ]
+  },
+  {
+   "id": "tee-26",
+   "en": "to question sb./sth.",
+   "de": "etw./jdn. infrage stellen",
+   "pos": "verb",
+   "collocations": "to question authority",
+   "example_en": "Learning to question authority is part of growing up."
+  },
+  {
+   "id": "tee-27",
+   "en": "to rebel (against sb./sth.)",
+   "de": "rebellieren (gegen jdn./etw.)",
+   "pos": "verb",
+   "ipa": "rɪˈbel",
+   "collocations": "to rebel against convention",
+   "example_en": "They rebel against rules their parents once rebelled against too."
+  },
+  {
+   "id": "tee-28",
+   "en": "teenage",
+   "de": "jugendlich",
+   "pos": "adjective",
+   "ipa": "ˈtiːneɪdʒ",
+   "collocations": "teenage years / rebellion",
+   "example_en": "The film is set during his teenage years in Manchester."
+  },
+  {
+   "id": "tee-29",
+   "en": "youth",
+   "de": "Jugend(zeit)",
+   "pos": "noun",
+   "ipa": "juːθ",
+   "collocations": "in one's youth",
+   "example_en": "In his youth he moved between three countries and two languages.",
+   "distractor_hint": [
+    "tee-30"
+   ]
+  },
+  {
+   "id": "tee-30",
+   "en": "youthful",
+   "de": "jugendlich",
+   "pos": "adjective",
+   "ipa": "ˈjuːθfl",
+   "collocations": "youthful idealism",
+   "example_en": "Her youthful idealism survived the first year of work.",
+   "distractor_hint": [
+    "tee-29"
+   ]
+  },
+  {
+   "id": "tee-31",
+   "en": "youth (sub-)culture",
+   "de": "Jugendkultur",
+   "pos": "noun",
+   "collocations": "to belong to a youth subculture",
+   "example_en": "Every youth subculture is eventually sold back to the people who invented it."
+  },
+  {
+   "id": "tee-32",
+   "en": "to achieve sth.",
+   "de": "etwas erreichen",
+   "pos": "verb",
+   "ipa": "əˈtʃiːv",
+   "collocations": "to achieve a goal",
+   "example_en": "She achieved more in one summer than in the two years before.",
+   "distractor_hint": [
+    "tee-33"
+   ]
+  },
+  {
+   "id": "tee-33",
+   "en": "achievement",
+   "de": "Errungenschaft, erreichtes Ziel",
+   "pos": "noun",
+   "ipa": "əˈtʃiːvmənt",
+   "collocations": "a remarkable achievement",
+   "example_en": "The greatest achievement of the project was that nobody dropped out.",
+   "distractor_hint": [
+    "tee-32"
+   ]
+  },
+  {
+   "id": "tee-34",
+   "en": "a circle of friends",
+   "de": "Freundeskreis",
+   "pos": "noun",
+   "collocations": "a close circle of friends",
+   "example_en": "Her circle of friends changed completely after the move."
+  },
+  {
+   "id": "tee-35",
+   "en": "convention",
+   "de": "Konvention",
+   "pos": "noun",
+   "ipa": "kənˈvenʃn",
+   "collocations": "social convention, to break with convention",
+   "example_en": "Social convention is invisible until somebody breaks it."
+  },
+  {
+   "id": "tee-36",
+   "en": "emancipation",
+   "de": "Emanzipation, Gleichberechtigung",
+   "pos": "noun",
+   "ipa": "ɪˌmænsɪˈpeɪʃn",
+   "collocations": "the emancipation of women",
+   "example_en": "Emancipation is measured in law and in everyday habits.",
+   "distractor_hint": [
+    "tee-37"
+   ]
+  },
+  {
+   "id": "tee-37",
+   "en": "legal emancipation",
+   "de": "rechtliche Gleichstellung",
+   "pos": "noun",
+   "example_en": "Legal emancipation came decades before equal treatment at work.",
+   "distractor_hint": [
+    "tee-36"
+   ]
+  },
+  {
+   "id": "tee-38",
+   "en": "to experiment with sth.",
+   "de": "mit etw. experimentieren",
+   "pos": "verb",
+   "ipa": "ɪkˈsperɪment",
+   "collocations": "to experiment with a new look",
+   "example_en": "At sixteen he experimented with three different names."
+  },
+  {
+   "id": "tee-39",
+   "en": "initiation",
+   "de": "Einführung, Aufnahme",
+   "pos": "noun",
+   "ipa": "ɪˌnɪʃiˈeɪʃn",
+   "collocations": "an initiation rite",
+   "example_en": "Many cultures mark the end of childhood with an initiation rite."
+  },
+  {
+   "id": "tee-40",
+   "en": "socialization",
+   "de": "Sozialisation",
+   "pos": "noun",
+   "ipa": "ˌsəʊʃəlaɪˈzeɪʃn",
+   "collocations": "primary / secondary socialization",
+   "example_en": "Socialization happens long before anyone explains the rules."
+  },
+  {
+   "id": "tee-41",
+   "en": "to team up with sb.",
+   "de": "mit jdm. zusammenarbeiten",
+   "pos": "phrasal verb",
+   "example_en": "She teamed up with two classmates to run the campaign."
+  },
+  {
+   "id": "tee-42",
+   "en": "transition",
+   "de": "Übergang",
+   "pos": "noun",
+   "ipa": "trænˈzɪʃn",
+   "collocations": "the transition from school to work",
+   "example_en": "The transition from school to work is rarely as smooth as the brochures suggest."
+  },
+  {
+   "id": "tee-43",
+   "en": "to get through sth.",
+   "de": "über etwas hinwegkommen",
+   "pos": "phrasal verb",
+   "collocations": "to get through a difficult time",
+   "example_en": "It took him a year to get through the break-up."
+  },
+  {
+   "id": "tee-44",
+   "en": "to gain experience",
+   "de": "Erfahrung(en) sammeln",
+   "pos": "phrase",
+   "example_en": "He took the job mainly to gain experience."
+  },
+  {
+   "id": "tee-45",
+   "en": "role model",
+   "de": "Idol, Vorbild",
+   "pos": "noun",
+   "collocations": "to be a role model for sb.",
+   "example_en": "Children copy role models long before they can name them."
+  },
+  {
+   "id": "tee-46",
+   "en": "femininity",
+   "de": "Weiblichkeit",
+   "pos": "noun",
+   "ipa": "ˌfeməˈnɪnəti",
+   "collocations": "ideas of femininity",
+   "example_en": "Ideas of femininity are advertised as if they were natural.",
+   "distractor_hint": [
+    "tee-47"
+   ]
+  },
+  {
+   "id": "tee-47",
+   "en": "masculinity",
+   "de": "Maskulinität, Männlichkeit",
+   "pos": "noun",
+   "ipa": "ˌmæskjuˈlɪnəti",
+   "collocations": "toxic masculinity",
+   "example_en": "The play asks what masculinity costs the men who perform it.",
+   "distractor_hint": [
+    "tee-46"
+   ]
+  },
+  {
+   "id": "tee-48",
+   "en": "gender roles",
+   "de": "Geschlechterrollen",
+   "pos": "noun",
+   "ipa": "ˈdʒendə",
+   "collocations": "traditional gender roles",
+   "example_en": "Gender roles are learned so early that they feel like character."
+  },
+  {
+   "id": "tee-49",
+   "en": "gender socialization",
+   "de": "Geschlechtssozialisation",
+   "pos": "noun",
+   "example_en": "Gender socialization begins with the colour of a blanket."
+  },
+  {
+   "id": "tee-50",
+   "en": "to feel attraction towards sb.",
+   "de": "sich zu jdm. hingezogen fühlen",
+   "pos": "phrase",
+   "ipa": "əˈtrækʃn",
+   "example_en": "He felt an attraction towards her that he could not explain."
+  },
+  {
+   "id": "tee-51",
+   "en": "gay",
+   "de": "schwul",
+   "pos": "adjective",
+   "collocations": "to be openly gay",
+   "example_en": "He came out as gay in his final year at school."
+  },
+  {
+   "id": "tee-52",
+   "en": "gays",
+   "de": "Schwule",
+   "pos": "noun",
+   "example_en": "Older newspaper articles refer to gays where a writer today would say gay people."
+  },
+  {
+   "id": "tee-53",
+   "en": "lesbian",
+   "de": "lesbisch; Lesbe",
+   "pos": "adjective",
+   "ipa": "ˈlezbiən",
+   "example_en": "The novel was one of the first to give a lesbian couple an ordinary ending."
+  },
+  {
+   "id": "tee-54",
+   "en": "heterosexual",
+   "de": "heterosexuell; Heterosexueller",
+   "pos": "adjective",
+   "ipa": "ˌhetərəˈsekʃuəl",
+   "example_en": "The survey asked heterosexual and homosexual respondents the same questions."
+  },
+  {
+   "id": "tee-55",
+   "en": "homosexual",
+   "de": "homosexuell; Homosexueller",
+   "pos": "adjective",
+   "ipa": "ˌhɒməˈsekʃuəl",
+   "example_en": "Homosexual relationships were criminalised in Britain until 1967.",
+   "distractor_hint": [
+    "tee-56"
+   ]
+  },
+  {
+   "id": "tee-56",
+   "en": "homosexuality",
+   "de": "Homosexualität",
+   "pos": "noun",
+   "ipa": "ˌhɒməsekʃuˈæləti",
+   "example_en": "Attitudes to homosexuality changed faster than the law did.",
+   "distractor_hint": [
+    "tee-55"
+   ]
+  },
+  {
+   "id": "tee-57",
+   "en": "relationship",
+   "de": "Beziehung",
+   "pos": "noun",
+   "ipa": "rɪˈleɪʃnʃɪp",
+   "collocations": "to be in a relationship with sb.",
+   "example_en": "They had been in a relationship for two years before anyone noticed."
+  },
+  {
+   "id": "tee-58",
+   "en": "blended family",
+   "de": "Patchwork-Familie",
+   "pos": "noun",
+   "collocations": "to grow up in a blended family",
+   "example_en": "She grew up in a blended family with four adults and six children.",
+   "distractor_hint": [
+    "tee-59"
+   ]
+  },
+  {
+   "id": "tee-59",
+   "en": "patchwork family",
+   "de": "Patchworkfamilie",
+   "pos": "noun",
+   "example_en": "Patchwork family is the term German speakers use; English usually says blended family.",
+   "distractor_hint": [
+    "tee-58"
+   ]
+  },
+  {
+   "id": "tee-60",
+   "en": "to bring up (brought, brought)",
+   "de": "aufziehen, erziehen",
+   "pos": "phrasal verb",
+   "collocations": "to bring up a child",
+   "example_en": "She was brought up by her grandparents."
+  },
+  {
+   "id": "tee-61",
+   "en": "to raise a child / children",
+   "de": "ein Kind / Kinder großziehen",
+   "pos": "phrase",
+   "example_en": "It costs more to raise a child in London than anywhere else in Britain.",
+   "distractor_hint": [
+    "tee-60"
+   ]
+  },
+  {
+   "id": "tee-62",
+   "en": "a close-knit family",
+   "de": "eine eng verbundene Familie",
+   "pos": "noun",
+   "ipa": "ˌkləʊs ˈnɪt",
+   "example_en": "They are a close-knit family who holiday together every year."
+  },
+  {
+   "id": "tee-63",
+   "en": "curfew",
+   "de": "Ausgangssperre; hier: die Zeit, zu der Jugendliche abends zu Hause sein müssen",
+   "pos": "noun",
+   "ipa": "ˈkɜːfjuː",
+   "collocations": "to break / impose a curfew",
+   "example_en": "Her curfew was eleven, which was later than anyone else's."
+  },
+  {
+   "id": "tee-64",
+   "en": "domestic quarrel",
+   "de": "familiärer Streit",
+   "pos": "noun",
+   "ipa": "ˈkwɒrəl",
+   "example_en": "The police are still called to more domestic quarrels than to burglaries."
+  },
+  {
+   "id": "tee-65",
+   "en": "extended family",
+   "de": "erweiterter Familienkreis",
+   "pos": "noun",
+   "example_en": "The extended family gathers only for weddings and funerals.",
+   "distractor_hint": [
+    "tee-66"
+   ]
+  },
+  {
+   "id": "tee-66",
+   "en": "nuclear family",
+   "de": "Kernfamilie (Vater, Mutter, Kind(er))",
+   "pos": "noun",
+   "ipa": "ˈnjuːkliə",
+   "example_en": "The nuclear family is a recent invention, not a natural state.",
+   "distractor_hint": [
+    "tee-65"
+   ]
+  },
+  {
+   "id": "tee-67",
+   "en": "single-parent family",
+   "de": "Familie mit nur einem Elternteil",
+   "pos": "noun",
+   "example_en": "One in four children grows up in a single-parent family."
+  },
+  {
+   "id": "tee-68",
+   "en": "family resemblance",
+   "de": "Familienähnlichkeit",
+   "pos": "noun",
+   "ipa": "rɪˈzembləns",
+   "collocations": "a striking family resemblance",
+   "example_en": "The family resemblance is striking in the older photographs."
+  },
+  {
+   "id": "tee-69",
+   "en": "family values",
+   "de": "Familienwerte",
+   "pos": "noun",
+   "collocations": "to appeal to family values",
+   "example_en": "Politicians appeal to family values without saying whose family they mean."
+  },
+  {
+   "id": "tee-70",
+   "en": "household chore",
+   "de": "häusliche Pflicht",
+   "pos": "noun",
+   "ipa": "tʃɔː",
+   "collocations": "to share the household chores",
+   "example_en": "Household chores are still divided along familiar lines."
+  },
+  {
+   "id": "tee-71",
+   "en": "marriage",
+   "de": "Ehe",
+   "pos": "noun",
+   "ipa": "ˈmærɪdʒ",
+   "collocations": "a happy / arranged marriage",
+   "example_en": "Marriage is a legal contract as much as a private promise.",
+   "distractor_hint": [
+    "tee-72"
+   ]
+  },
+  {
+   "id": "tee-72",
+   "en": "wedding",
+   "de": "Hochzeit",
+   "pos": "noun",
+   "ipa": "ˈwedɪŋ",
+   "collocations": "to attend a wedding",
+   "example_en": "The wedding lasted a day; the marriage lasted forty years.",
+   "distractor_hint": [
+    "tee-71"
+   ]
+  },
+  {
+   "id": "tee-73",
+   "en": "relative(s)",
+   "de": "Verwandte(r)",
+   "pos": "noun",
+   "ipa": "ˈrelətɪv",
+   "collocations": "a distant relative",
+   "example_en": "A distant relative left her a house she had never seen.",
+   "distractor_hint": [
+    "tee-74"
+   ]
+  },
+  {
+   "id": "tee-74",
+   "en": "related",
+   "de": "verwandt",
+   "pos": "adjective",
+   "ipa": "rɪˈleɪtɪd",
+   "collocations": "to be related to sb.",
+   "example_en": "It turned out they were related through their grandmothers.",
+   "distractor_hint": [
+    "tee-73"
+   ]
+  },
+  {
+   "id": "tee-75",
+   "en": "sibling(s)",
+   "de": "Geschwister",
+   "pos": "noun",
+   "ipa": "ˈsɪblɪŋ",
+   "collocations": "sibling rivalry",
+   "example_en": "Sibling rivalry rarely disappears; it just gets quieter."
+  },
+  {
+   "id": "tee-76",
+   "en": "to date sb.",
+   "de": "sich mit jdm. verabreden, mit jdm. ausgehen",
+   "pos": "verb",
+   "example_en": "They dated for six months before telling anyone."
+  },
+  {
+   "id": "tee-77",
+   "en": "to fall in love with sb.",
+   "de": "sich in jdn. verlieben",
+   "pos": "phrase",
+   "example_en": "He fell in love with someone who barely noticed him."
+  },
+  {
+   "id": "tee-78",
+   "en": "to be jealous of sb.",
+   "de": "eifersüchtig / neidisch auf jdn. sein",
+   "pos": "phrase",
+   "ipa": "ˈdʒeləs",
+   "example_en": "She was jealous of a friendship she had not been invited into."
+  },
+  {
+   "id": "tee-79",
+   "en": "mutual",
+   "de": "gegenseitig",
+   "pos": "adjective",
+   "ipa": "ˈmjuːtʃuəl",
+   "collocations": "mutual respect / consent",
+   "example_en": "Any relationship worth the name rests on mutual respect."
+  },
+  {
+   "id": "tee-80",
+   "en": "to make love to sb.",
+   "de": "mit jdm. schlafen",
+   "pos": "phrase",
+   "example_en": "The song is about making love, but the video is about selling perfume."
+  },
+  {
+   "id": "tee-81",
+   "en": "(to have) sexual intercourse",
+   "de": "Geschlechtsverkehr (haben)",
+   "pos": "noun",
+   "ipa": "ˈɪntəkɔːs",
+   "example_en": "The report uses the term sexual intercourse where students would say sleeping together."
+  },
+  {
+   "id": "tee-82",
+   "en": "(sexual) maturity",
+   "de": "(sexuelle) Reife",
+   "pos": "noun",
+   "ipa": "məˈtʃʊərəti",
+   "collocations": "to reach maturity",
+   "example_en": "Sexual maturity and emotional maturity do not arrive together.",
+   "distractor_hint": [
+    "tee-21"
+   ]
+  },
+  {
+   "id": "tee-83",
+   "en": "premarital (sex)",
+   "de": "vorehelich(er Geschlechtsverkehr)",
+   "pos": "adjective",
+   "ipa": "ˌpriːˈmærɪtl",
+   "example_en": "Attitudes to premarital sex changed within a single generation."
+  },
+  {
+   "id": "tee-84",
+   "en": "promiscuity",
+   "de": "häufiger Partnerwechsel",
+   "pos": "noun",
+   "ipa": "ˌprɒmɪˈskjuːəti",
+   "example_en": "The word promiscuity is applied to women far more often than to men.",
+   "distractor_hint": [
+    "tee-85"
+   ]
+  },
+  {
+   "id": "tee-85",
+   "en": "promiscuous",
+   "de": "häufig den Partner wechselnd",
+   "pos": "adjective",
+   "ipa": "prəˈmɪskjuəs",
+   "example_en": "Calling someone promiscuous says more about the speaker than the subject.",
+   "distractor_hint": [
+    "tee-84"
+   ]
+  },
+  {
+   "id": "tee-86",
+   "en": "to practise safe sex",
+   "de": "Safer Sex praktizieren",
+   "pos": "phrase",
+   "example_en": "The campaign urged young people to practise safe sex without moralising."
+  },
+  {
+   "id": "tee-87",
+   "en": "contraception",
+   "de": "Schwangerschaftsverhütung",
+   "pos": "noun",
+   "ipa": "ˌkɒntrəˈsepʃn",
+   "collocations": "the use of contraception",
+   "example_en": "Access to contraception changed women's working lives.",
+   "distractor_hint": [
+    "tee-88"
+   ]
+  },
+  {
+   "id": "tee-88",
+   "en": "contraceptive",
+   "de": "Verhütungsmittel",
+   "pos": "noun",
+   "ipa": "ˌkɒntrəˈseptɪv",
+   "example_en": "Contraceptives are free on the NHS.",
+   "distractor_hint": [
+    "tee-87"
+   ]
+  },
+  {
+   "id": "tee-89",
+   "en": "to be on the pill",
+   "de": "die (Anti-Baby-)Pille nehmen",
+   "pos": "phrase",
+   "example_en": "She had been on the pill for a year without telling her mother."
+  },
+  {
+   "id": "tee-90",
+   "en": "birth control",
+   "de": "Geburtenkontrolle, -regelung",
+   "pos": "noun",
+   "example_en": "Birth control was debated as a moral question long before a medical one.",
+   "distractor_hint": [
+    "tee-91"
+   ]
+  },
+  {
+   "id": "tee-91",
+   "en": "family planning",
+   "de": "Familienplanung, Geburtenkontrolle",
+   "pos": "noun",
+   "collocations": "a family planning clinic",
+   "example_en": "The family planning clinic offers advice without an appointment.",
+   "distractor_hint": [
+    "tee-90"
+   ]
+  },
+  {
+   "id": "tee-92",
+   "en": "fertile",
+   "de": "fruchtbar, zeugungsfähig",
+   "pos": "adjective",
+   "ipa": "ˈfɜːtaɪl",
+   "example_en": "The textbook explains which days of the cycle are fertile."
+  },
+  {
+   "id": "tee-93",
+   "en": "pregnancy test",
+   "de": "Schwangerschaftstest",
+   "pos": "noun",
+   "ipa": "ˈpreɡnənsi",
+   "collocations": "to take a pregnancy test",
+   "example_en": "She bought the pregnancy test three towns away."
+  },
+  {
+   "id": "tee-94",
+   "en": "counselling (on pregnancy options)",
+   "de": "Schwangerschaftskonfliktberatung",
+   "pos": "noun",
+   "ipa": "ˈkaʊnsəlɪŋ",
+   "example_en": "Counselling is compulsory before the procedure in some countries."
+  },
+  {
+   "id": "tee-95",
+   "en": "(to have an) abortion",
+   "de": "eine Abtreibung (vornehmen lassen)",
+   "pos": "noun",
+   "ipa": "əˈbɔːʃn",
+   "example_en": "Few political questions divide the United States as sharply as abortion."
+  },
+  {
+   "id": "tee-96",
+   "en": "helpline",
+   "de": "Notrufnummer, Sorgentelefon",
+   "pos": "noun",
+   "ipa": "ˈhelplaɪn",
+   "collocations": "to call a helpline",
+   "example_en": "The number of the helpline is printed at the end of every episode."
+  },
+  {
+   "id": "tee-97",
+   "en": "STD (sexually transmitted disease)",
+   "de": "Geschlechtskrankheit",
+   "pos": "abbreviation",
+   "collocations": "to test for STDs",
+   "example_en": "Testing for STDs is free and confidential at the clinic."
+  },
+  {
+   "id": "tee-98",
+   "en": "appearance",
+   "de": "(äußere) Erscheinung",
+   "pos": "noun",
+   "ipa": "əˈpɪərəns",
+   "collocations": "to judge sb. by their appearance",
+   "example_en": "We are told not to judge by appearance and taught to do exactly that."
+  },
+  {
+   "id": "tee-99",
+   "en": "(physical) attractiveness",
+   "de": "Attraktivität, gutes Aussehen",
+   "pos": "noun",
+   "ipa": "əˈtræktɪvnəs",
+   "example_en": "Studies keep finding that physical attractiveness affects hiring decisions."
+  },
+  {
+   "id": "tee-100",
+   "en": "good-looking",
+   "de": "gutaussehend, attraktiv",
+   "pos": "adjective",
+   "example_en": "The advertisement needed someone good-looking and forgettable.",
+   "distractor_hint": [
+    "tee-101"
+   ]
+  },
+  {
+   "id": "tee-101",
+   "en": "handsome",
+   "de": "gutaussehend, attraktiv",
+   "pos": "adjective",
+   "ipa": "ˈhænsəm",
+   "example_en": "In older novels handsome describes men; today the word travels further.",
+   "distractor_hint": [
+    "tee-100"
+   ]
+  },
+  {
+   "id": "tee-102",
+   "en": "image (of sb.)",
+   "de": "(geistige) Vorstellung von jdm.",
+   "pos": "noun",
+   "ipa": "ˈɪmɪdʒ",
+   "collocations": "to project an image",
+   "example_en": "The image she projects online has little to do with her Tuesdays."
+  },
+  {
+   "id": "tee-103",
+   "en": "body weight",
+   "de": "Körpergewicht",
+   "pos": "noun",
+   "example_en": "The article discusses body weight without once mentioning health."
+  },
+  {
+   "id": "tee-104",
+   "en": "to be a particular weight",
+   "de": "ein bestimmtes Gewicht haben",
+   "pos": "phrase",
+   "example_en": "Nobody has to be a particular weight to be taken seriously."
+  },
+  {
+   "id": "tee-105",
+   "en": "sb.'s ideal weight",
+   "de": "Idealgewicht",
+   "pos": "noun",
+   "example_en": "What counts as an ideal weight has changed with every decade of advertising."
+  },
+  {
+   "id": "tee-106",
+   "en": "BMI (body mass index)",
+   "de": "Maßzahl für das Verhältnis zwischen Körpergröße und Gewicht",
+   "pos": "abbreviation",
+   "example_en": "Critics point out that the BMI says very little about an individual."
+  },
+  {
+   "id": "tee-107",
+   "en": "to gain / lose weight",
+   "de": "zunehmen / abnehmen",
+   "pos": "phrase",
+   "example_en": "People gain and lose weight for reasons that are rarely visible."
+  },
+  {
+   "id": "tee-108",
+   "en": "to get / keep your weight down",
+   "de": "sein Gewicht reduzieren",
+   "pos": "phrase",
+   "example_en": "Magazines explain how to get your weight down and almost never how to be at ease."
+  },
+  {
+   "id": "tee-109",
+   "en": "to watch your weight",
+   "de": "auf sein Gewicht achten",
+   "pos": "phrase",
+   "example_en": "Being told to watch your weight can do lasting harm in adolescence."
+  },
+  {
+   "id": "tee-110",
+   "en": "obese",
+   "de": "fettleibig",
+   "pos": "adjective",
+   "ipa": "əʊˈbiːs",
+   "example_en": "Obese patients report being judged before they have said a word.",
+   "distractor_hint": [
+    "tee-111"
+   ]
+  },
+  {
+   "id": "tee-111",
+   "en": "obesity",
+   "de": "Fettleibigkeit, extremes Übergewicht",
+   "pos": "noun",
+   "ipa": "əʊˈbiːsəti",
+   "collocations": "childhood obesity",
+   "example_en": "Obesity is treated as a personal failure and caused by a food system.",
+   "distractor_hint": [
+    "tee-110"
+   ]
+  },
+  {
+   "id": "tee-112",
+   "en": "overweight",
+   "de": "übergewichtig",
+   "pos": "adjective",
+   "ipa": "ˌəʊvəˈweɪt",
+   "example_en": "The word overweight assumes a right weight to be over.",
+   "distractor_hint": [
+    "tee-113"
+   ]
+  },
+  {
+   "id": "tee-113",
+   "en": "underweight",
+   "de": "untergewichtig",
+   "pos": "adjective",
+   "ipa": "ˌʌndəˈweɪt",
+   "example_en": "Underweight bodies are praised in the same magazines that warn against them.",
+   "distractor_hint": [
+    "tee-112"
+   ]
+  },
+  {
+   "id": "tee-114",
+   "en": "fat",
+   "de": "dick, übergewichtig",
+   "pos": "adjective",
+   "example_en": "Calling a classmate fat can leave marks that outlast school."
+  },
+  {
+   "id": "tee-115",
+   "en": "big",
+   "de": "dick, groß",
+   "pos": "adjective",
+   "example_en": "Big is the polite word people reach for when they mean something less kind."
+  },
+  {
+   "id": "tee-116",
+   "en": "skinny",
+   "de": "mager, dürr",
+   "pos": "adjective",
+   "ipa": "ˈskɪni",
+   "example_en": "Being called skinny can hurt as much as being called fat.",
+   "distractor_hint": [
+    "tee-117"
+   ]
+  },
+  {
+   "id": "tee-117",
+   "en": "slim",
+   "de": "schlank",
+   "pos": "adjective",
+   "example_en": "Slim is a compliment and skinny is not, though they describe the same body.",
+   "distractor_hint": [
+    "tee-116"
+   ]
+  },
+  {
+   "id": "tee-118",
+   "en": "plus-size",
+   "de": "in Übergröße",
+   "pos": "adjective",
+   "collocations": "plus-size model / range",
+   "example_en": "The brand launched a plus-size range and called it inclusion."
+  },
+  {
+   "id": "tee-119",
+   "en": "tall",
+   "de": "groß, lang",
+   "pos": "adjective",
+   "example_en": "He grew tall in one summer and spent a year apologising for it."
+  },
+  {
+   "id": "tee-120",
+   "en": "well-being",
+   "de": "Wohlbefinden",
+   "pos": "noun",
+   "ipa": "ˌwel ˈbiːɪŋ",
+   "collocations": "physical and mental well-being",
+   "example_en": "Schools now talk about well-being where they used to talk about discipline."
+  },
+  {
+   "id": "tee-121",
+   "en": "eating habit(s)",
+   "de": "Essgewohnheit(en)",
+   "pos": "noun",
+   "collocations": "to change one's eating habits",
+   "example_en": "Eating habits are formed at home and defended everywhere else."
+  },
+  {
+   "id": "tee-122",
+   "en": "eating disorder",
+   "de": "Essstörung",
+   "pos": "noun",
+   "collocations": "to develop an eating disorder",
+   "example_en": "An eating disorder is an illness, not a decision."
+  },
+  {
+   "id": "tee-123",
+   "en": "anorexia",
+   "de": "Magersucht",
+   "pos": "noun",
+   "ipa": "ˌænəˈreksiə",
+   "collocations": "to suffer from anorexia",
+   "example_en": "Anorexia has one of the highest mortality rates of any mental illness.",
+   "distractor_hint": [
+    "tee-124"
+   ]
+  },
+  {
+   "id": "tee-124",
+   "en": "anorexic",
+   "de": "magersüchtig",
+   "pos": "adjective",
+   "ipa": "ˌænəˈreksɪk",
+   "example_en": "Doctors note that anorexic patients often insist nothing is wrong.",
+   "distractor_hint": [
+    "tee-123"
+   ]
+  },
+  {
+   "id": "tee-125",
+   "en": "bulimia",
+   "de": "Ess-Brech-Sucht, Bulimie",
+   "pos": "noun",
+   "ipa": "bjuːˈlɪmiə",
+   "example_en": "Bulimia can go unnoticed for years because it leaves fewer visible signs."
+  },
+  {
+   "id": "tee-126",
+   "en": "to binge on sth.",
+   "de": "übermäßig essen oder trinken",
+   "pos": "verb",
+   "ipa": "bɪndʒ",
+   "example_en": "The pattern of bingeing and shame is described in every account of the illness."
+  },
+  {
+   "id": "tee-127",
+   "en": "to starve oneself",
+   "de": "(sich schlank) hungern",
+   "pos": "phrase",
+   "ipa": "stɑːv",
+   "example_en": "The campaign asks why anyone would starve themselves to meet a standard nobody set."
+  },
+  {
+   "id": "tee-128",
+   "en": "chat room",
+   "de": "virtueller Treffpunkt im Internet",
+   "pos": "noun",
+   "example_en": "The chat rooms of the early internet were anonymous by design."
+  },
+  {
+   "id": "tee-129",
+   "en": "to surf the Internet",
+   "de": "im Internet surfen",
+   "pos": "phrase",
+   "example_en": "Nobody says they surf the Internet any more, which dates the phrase precisely."
+  }
+ ],
+ "q2-abroad": [
+  {
+   "id": "abr-01",
+   "en": "after-school tutoring",
+   "de": "Unterricht nach der Schule",
+   "pos": "noun",
+   "ipa": "ˈtjuːtərɪŋ",
+   "collocations": "to offer after-school tutoring",
+   "example_en": "She spends two afternoons a week doing after-school tutoring at the local primary school."
+  },
+  {
+   "id": "abr-02",
+   "en": "call to service",
+   "de": "Wunsch, sich sozial zu engagieren",
+   "pos": "noun",
+   "collocations": "to feel a call to service",
+   "example_en": "Politicians like to speak of a call to service; students tend to speak of a gap year."
+  },
+  {
+   "id": "abr-03",
+   "en": "community service",
+   "de": "Freiwilligendienst für die Gemeinschaft",
+   "pos": "noun",
+   "ipa": "kəˈmjuːnəti",
+   "collocations": "to do community service",
+   "example_en": "In some American states community service is a condition of graduation."
+  },
+  {
+   "id": "abr-04",
+   "en": "social commitment",
+   "de": "soziales Engagement",
+   "pos": "noun",
+   "ipa": "kəˈmɪtmənt",
+   "collocations": "to show social commitment",
+   "example_en": "Universities increasingly ask applicants to document their social commitment."
+  },
+  {
+   "id": "abr-05",
+   "en": "disadvantaged",
+   "de": "benachteiligt",
+   "pos": "adjective",
+   "ipa": "ˌdɪsədˈvɑːntɪdʒd",
+   "collocations": "disadvantaged young people",
+   "example_en": "The programme works with children from disadvantaged backgrounds."
+  },
+  {
+   "id": "abr-06",
+   "en": "gap year",
+   "de": "freiwilliges (soziales) Jahr",
+   "pos": "noun",
+   "collocations": "to take a gap year",
+   "example_en": "He took a gap year and came back with better English and fewer certainties."
+  },
+  {
+   "id": "abr-07",
+   "en": "to mentor sb.",
+   "de": "jdn. betreuen, beraten",
+   "pos": "verb",
+   "ipa": "ˈmentɔː",
+   "collocations": "to mentor a younger student",
+   "example_en": "Older pupils mentor the new arrivals during their first term."
+  },
+  {
+   "id": "abr-08",
+   "en": "to take the opportunity",
+   "de": "die Gelegenheit ergreifen",
+   "pos": "phrase",
+   "ipa": "ˌɒpəˈtjuːnəti",
+   "example_en": "She took the opportunity to spend a year in Cape Town.",
+   "distractor_hint": [
+    "abr-21"
+   ]
+  },
+  {
+   "id": "abr-09",
+   "en": "to participate in sth.",
+   "de": "an etwas teilnehmen",
+   "pos": "verb",
+   "ipa": "pɑːˈtɪsɪpeɪt",
+   "collocations": "to participate in a project",
+   "example_en": "Fewer than half the pupils participate in extra-curricular activities."
+  },
+  {
+   "id": "abr-10",
+   "en": "to serve a common purpose",
+   "de": "einem gemeinsamen Ziel dienen",
+   "pos": "phrase",
+   "ipa": "ˈpɜːpəs",
+   "example_en": "Volunteers from six countries served a common purpose without a common language."
+  },
+  {
+   "id": "abr-11",
+   "en": "voluntary",
+   "de": "freiwillig",
+   "pos": "adjective",
+   "ipa": "ˈvɒləntri",
+   "collocations": "voluntary work",
+   "example_en": "Participation is voluntary, which is exactly why it works.",
+   "distractor_hint": [
+    "abr-12"
+   ]
+  },
+  {
+   "id": "abr-12",
+   "en": "volunteer",
+   "de": "Freiwillige(r)",
+   "pos": "noun",
+   "ipa": "ˌvɒlənˈtɪə",
+   "collocations": "to work as a volunteer",
+   "example_en": "The charity relies on 300 volunteers and eleven paid staff.",
+   "distractor_hint": [
+    "abr-11"
+   ]
+  },
+  {
+   "id": "abr-13",
+   "en": "international volunteering",
+   "de": "internationaler Freiwilligendienst",
+   "pos": "noun",
+   "example_en": "International volunteering is sometimes criticised as tourism with a better conscience."
+  },
+  {
+   "id": "abr-14",
+   "en": "to be engaged in sth.",
+   "de": "mit etwas beschäftigt sein",
+   "pos": "phrase",
+   "ipa": "ɪnˈɡeɪdʒd",
+   "example_en": "She has been engaged in refugee work since her first year at university."
+  },
+  {
+   "id": "abr-15",
+   "en": "charity organization",
+   "de": "Wohlfahrtsorganisation",
+   "pos": "noun",
+   "ipa": "ˈtʃærəti",
+   "example_en": "The charity organization publishes its accounts every spring.",
+   "distractor_hint": [
+    "abr-16"
+   ]
+  },
+  {
+   "id": "abr-16",
+   "en": "charitable",
+   "de": "menschenfreundlich, gemeinnützig",
+   "pos": "adjective",
+   "ipa": "ˈtʃærətəbl",
+   "collocations": "a charitable trust",
+   "example_en": "The money came from a charitable trust set up in the 1920s.",
+   "distractor_hint": [
+    "abr-15"
+   ]
+  },
+  {
+   "id": "abr-17",
+   "en": "to donate / give sth. to charity",
+   "de": "etwas für gemeinnützige Zwecke spenden",
+   "pos": "phrase",
+   "ipa": "dəʊˈneɪt",
+   "example_en": "He donates a fixed share of his salary to charity every month."
+  },
+  {
+   "id": "abr-18",
+   "en": "to finance a project",
+   "de": "ein Projekt finanzieren",
+   "pos": "phrase",
+   "ipa": "ˈfaɪnæns",
+   "example_en": "Local businesses helped to finance the project for three years."
+  },
+  {
+   "id": "abr-19",
+   "en": "NGO (non-governmental organization)",
+   "de": "Nichtregierungsorganisation, Hilfsorganisation",
+   "pos": "abbreviation",
+   "collocations": "to work for an NGO",
+   "example_en": "The NGO withdrew its staff two weeks before the border closed."
+  },
+  {
+   "id": "abr-20",
+   "en": "living conditions",
+   "de": "Lebensbedingungen",
+   "pos": "noun",
+   "collocations": "to improve living conditions",
+   "example_en": "The report describes living conditions that have not changed in a decade."
+  },
+  {
+   "id": "abr-21",
+   "en": "to take your chances",
+   "de": "es riskieren, es darauf ankommen lassen",
+   "pos": "phrase",
+   "example_en": "With no visa and no contact on the ground, she decided to take her chances.",
+   "distractor_hint": [
+    "abr-08"
+   ]
+  },
+  {
+   "id": "abr-22",
+   "en": "stay abroad",
+   "de": "Auslandsaufenthalt",
+   "pos": "noun",
+   "ipa": "əˈbrɔːd",
+   "collocations": "a stay abroad",
+   "example_en": "A stay abroad looks better on paper than it feels in the first fortnight.",
+   "distractor_hint": [
+    "abr-23"
+   ]
+  },
+  {
+   "id": "abr-23",
+   "en": "to study abroad",
+   "de": "im Ausland studieren",
+   "pos": "phrase",
+   "example_en": "Roughly one in three German students now studies abroad at some point.",
+   "distractor_hint": [
+    "abr-22"
+   ]
+  },
+  {
+   "id": "abr-24",
+   "en": "exchange student",
+   "de": "Austauschschüler(in)",
+   "pos": "noun",
+   "ipa": "ɪksˈtʃeɪndʒ",
+   "collocations": "to host an exchange student",
+   "example_en": "The family has hosted an exchange student every year since 2009."
+  },
+  {
+   "id": "abr-25",
+   "en": "to apply for a visa",
+   "de": "ein Visum beantragen",
+   "pos": "phrase",
+   "ipa": "ˈviːzə",
+   "example_en": "Apply for a visa at least three months before departure."
+  },
+  {
+   "id": "abr-26",
+   "en": "certificate of vaccination",
+   "de": "Impfpass, Impfnachweis",
+   "pos": "noun",
+   "ipa": "ˌvæksɪˈneɪʃn",
+   "example_en": "The programme asks for a certificate of vaccination and little else."
+  },
+  {
+   "id": "abr-27",
+   "en": "safety precautions",
+   "de": "Sicherheitsvorkehrungen",
+   "pos": "noun",
+   "ipa": "prɪˈkɔːʃnz",
+   "collocations": "to take safety precautions",
+   "example_en": "The briefing covers safety precautions that nobody expects to need."
+  },
+  {
+   "id": "abr-28",
+   "en": "cross-cultural communication",
+   "de": "interkulturelle Verständigung",
+   "pos": "noun",
+   "example_en": "Cross-cultural communication fails most often over silence, not over words."
+  },
+  {
+   "id": "abr-29",
+   "en": "developing country / developing world",
+   "de": "Entwicklungsland",
+   "pos": "noun",
+   "ipa": "dɪˈveləpɪŋ",
+   "example_en": "The term developing country flattens differences it cannot describe."
+  },
+  {
+   "id": "abr-30",
+   "en": "reverse culture shock",
+   "de": "Anpassungsprobleme nach der Rückkehr aus dem Ausland",
+   "pos": "noun",
+   "ipa": "rɪˈvɜːs",
+   "collocations": "to experience reverse culture shock",
+   "example_en": "Nobody had warned her about reverse culture shock; the year abroad had been the easy part."
+  },
+  {
+   "id": "abr-31",
+   "en": "to settle back in",
+   "de": "sich wieder einleben",
+   "pos": "phrasal verb",
+   "example_en": "It took him a whole term to settle back in at his old school."
+  },
+  {
+   "id": "abr-32",
+   "en": "admission",
+   "de": "Zutritt, Zulassung",
+   "pos": "noun",
+   "ipa": "ədˈmɪʃn",
+   "collocations": "to gain admission to a university",
+   "example_en": "Admission to the course depends on an interview, not only on grades.",
+   "distractor_hint": [
+    "abr-33"
+   ]
+  },
+  {
+   "id": "abr-33",
+   "en": "to admit sb.",
+   "de": "hereinlassen, zulassen",
+   "pos": "verb",
+   "ipa": "ədˈmɪt",
+   "collocations": "to admit sb. to a university",
+   "example_en": "The university admits fewer than one in ten applicants.",
+   "distractor_hint": [
+    "abr-32"
+   ]
+  },
+  {
+   "id": "abr-34",
+   "en": "A-levels",
+   "de": "Abitur (britischer Schulabschluss)",
+   "pos": "noun",
+   "collocations": "to sit one's A-levels",
+   "example_en": "She is taking four A-levels, one more than most of her year.",
+   "distractor_hint": [
+    "abr-35"
+   ]
+  },
+  {
+   "id": "abr-35",
+   "en": "high school diploma",
+   "de": "Oberschulabschluss (USA)",
+   "pos": "noun",
+   "ipa": "dɪˈpləʊmə",
+   "example_en": "A high school diploma alone no longer opens the doors it once did.",
+   "distractor_hint": [
+    "abr-34"
+   ]
+  },
+  {
+   "id": "abr-36",
+   "en": "diploma",
+   "de": "(Abschluss-)Diplom",
+   "pos": "noun",
+   "ipa": "dɪˈpləʊmə",
+   "collocations": "to be awarded a diploma",
+   "example_en": "The diploma hangs in the hallway where visitors cannot miss it."
+  },
+  {
+   "id": "abr-37",
+   "en": "to graduate from high school",
+   "de": "die Schule mit einem Abschluss beenden",
+   "pos": "phrase",
+   "ipa": "ˈɡrædʒueɪt",
+   "example_en": "He graduated from high school a year early.",
+   "distractor_hint": [
+    "abr-38"
+   ]
+  },
+  {
+   "id": "abr-38",
+   "en": "graduate",
+   "de": "(Schul-, Hochschul-)Absolvent(in)",
+   "pos": "noun",
+   "ipa": "ˈɡrædʒuət",
+   "collocations": "a university graduate",
+   "example_en": "Graduates of the programme are tracked for five years afterwards.",
+   "distractor_hint": [
+    "abr-37"
+   ]
+  },
+  {
+   "id": "abr-39",
+   "en": "higher education",
+   "de": "Hochschulausbildung, akademische Ausbildung",
+   "pos": "noun",
+   "collocations": "access to higher education",
+   "example_en": "Access to higher education still depends heavily on the postcode you grew up in."
+  },
+  {
+   "id": "abr-40",
+   "en": "entrance exam",
+   "de": "Zulassungsprüfung",
+   "pos": "noun",
+   "ipa": "ˈentrəns",
+   "collocations": "to sit an entrance exam",
+   "example_en": "The entrance exam lasts three hours and decides very little."
+  },
+  {
+   "id": "abr-41",
+   "en": "SAT (Scholastic Assessment Test)",
+   "de": "Zulassungstest, Eignungstest (USA)",
+   "pos": "abbreviation",
+   "collocations": "to take the SAT",
+   "example_en": "Hundreds of American universities have stopped requiring the SAT."
+  },
+  {
+   "id": "abr-42",
+   "en": "compulsory (subject)",
+   "de": "Pflichtfach",
+   "pos": "adjective",
+   "ipa": "kəmˈpʌlsəri",
+   "collocations": "a compulsory subject",
+   "example_en": "English is a compulsory subject up to the final year.",
+   "distractor_hint": [
+    "abr-43"
+   ]
+  },
+  {
+   "id": "abr-43",
+   "en": "optional (subject)",
+   "de": "Wahlfach",
+   "pos": "adjective",
+   "ipa": "ˈɒpʃənl",
+   "collocations": "an optional subject",
+   "example_en": "Latin became optional in 2003 and the numbers halved within a decade.",
+   "distractor_hint": [
+    "abr-42"
+   ]
+  },
+  {
+   "id": "abr-44",
+   "en": "compulsory education / schooling",
+   "de": "allgemeine Schulpflicht",
+   "pos": "noun",
+   "example_en": "Compulsory education was introduced in Prussia long before it reached Britain."
+  },
+  {
+   "id": "abr-45",
+   "en": "extra-curricular activity",
+   "de": "Aktivität außerhalb des Stundenplans",
+   "pos": "noun",
+   "example_en": "Extra-curricular activities count for more in American applications than in German ones."
+  },
+  {
+   "id": "abr-46",
+   "en": "fee",
+   "de": "Gebühr, Schulgeld",
+   "pos": "noun",
+   "ipa": "fiː",
+   "collocations": "to charge a fee",
+   "example_en": "The school charges no fee but expects a contribution.",
+   "distractor_hint": [
+    "abr-47"
+   ]
+  },
+  {
+   "id": "abr-47",
+   "en": "to pay tuition fees",
+   "de": "Studiengebühren bezahlen",
+   "pos": "phrase",
+   "ipa": "tjuˈɪʃn",
+   "example_en": "English students pay tuition fees of over nine thousand pounds a year.",
+   "distractor_hint": [
+    "abr-46"
+   ]
+  },
+  {
+   "id": "abr-48",
+   "en": "scholarship",
+   "de": "Stipendium",
+   "pos": "noun",
+   "ipa": "ˈskɒləʃɪp",
+   "collocations": "to be awarded a scholarship",
+   "example_en": "She won a scholarship that covered everything except homesickness."
+  },
+  {
+   "id": "abr-49",
+   "en": "report",
+   "de": "Zeugnis",
+   "pos": "noun",
+   "ipa": "rɪˈpɔːt",
+   "collocations": "a school report",
+   "example_en": "His school report said he was capable, which his parents read as a complaint."
+  },
+  {
+   "id": "abr-50",
+   "en": "to pass an exam",
+   "de": "eine Prüfung bestehen",
+   "pos": "phrase",
+   "example_en": "He passed the exam on his second attempt.",
+   "distractor_hint": [
+    "abr-51"
+   ]
+  },
+  {
+   "id": "abr-51",
+   "en": "to take a course / an exam",
+   "de": "an einem Kurs teilnehmen; eine Prüfung ablegen",
+   "pos": "phrase",
+   "example_en": "You can take the exam twice; you can take the course only once.",
+   "distractor_hint": [
+    "abr-50"
+   ]
+  }
+ ]
+};
+</script>
+
+<script>
+/* =========================================================================
+   SPEICHER  –  localStorage mit Rückfallebene im Arbeitsspeicher
+   ========================================================================= */
+const Store = (function(){
+  let persistent = true, mem = {};
+  try{
+    localStorage.setItem("vt:test","1");
+    localStorage.removeItem("vt:test");
+  }catch(e){ persistent = false; }
+  return {
+    persistent,
+    get(k){
+      try{
+        if(persistent) return localStorage.getItem(k);
+        return (k in mem) ? mem[k] : null;
+      }catch(e){ return (k in mem) ? mem[k] : null; }
+    },
+    set(k,v){
+      try{ persistent ? localStorage.setItem(k,v) : (mem[k]=v); }
+      catch(e){ mem[k]=v; }
+    }
+  };
+})();
+
+const KEY = "vt:progress";
+const INTERVALS = [0,1,2,4,8,16];      // Fach 1..5 -> Tage bis zur Wiedervorlage
+const DAY = 86400000;
+
+let progress = (function(){
+  try{ return JSON.parse(Store.get(KEY)) || {}; }catch(e){ return {}; }
+})();
+
+function save(){ Store.set(KEY, JSON.stringify(progress)); }
+
+function rec(topicId, dir, vid){
+  if(!progress[topicId]) progress[topicId] = {};
+  if(!progress[topicId][dir]) progress[topicId][dir] = {};
+  if(!progress[topicId][dir][vid]) progress[topicId][dir][vid] = {box:1, due:0};
+  return progress[topicId][dir][vid];
+}
+function isDue(r){ return Date.now() >= r.due; }
+
+function boxCounts(topicId, dir){
+  const c=[0,0,0,0,0];
+  for(const v of SETS[topicId]) c[rec(topicId,dir,v.id).box-1]++;
+  return c;
+}
+function dueCount(topicId, dir){
+  return SETS[topicId].filter(v => isDue(rec(topicId,dir,v.id))).length;
+}
+
+/* =========================================================================
+   AUSSPRACHE  –  Web Speech API des Browsers, keine externe Anbindung
+   Nutzt die auf dem Gerät installierten Stimmen. Kein Konto, kein Schlüssel,
+   kein Datenversand. Verfügbarkeit und Qualität hängen vom Endgerät ab.
+   ========================================================================= */
+const Speech = (function(){
+  const synth = window.speechSynthesis;
+  if(!synth) return {available:false, say(){}};
+  let voice = null;
+  function pick(){
+    const vs = synth.getVoices().filter(v => /^en/i.test(v.lang));
+    if(!vs.length) return;
+    voice = vs.find(v => /en[-_]GB/i.test(v.lang) && !/novelty/i.test(v.name))
+         || vs.find(v => /en[-_]GB/i.test(v.lang))
+         || vs.find(v => /en[-_]US/i.test(v.lang))
+         || vs[0];
+  }
+  pick();
+  if(synth.addEventListener) synth.addEventListener("voiceschanged", pick);
+  return {
+    available:true,
+    say(text, btn){
+      try{
+        synth.cancel();
+        const u = new SpeechSynthesisUtterance(text.replace(/^to\s+/i,""));
+        if(voice){ u.voice = voice; u.lang = voice.lang; } else { u.lang = "en-GB"; }
+        u.rate = 0.9;
+        if(btn){
+          btn.classList.add("on");
+          u.onend = u.onerror = () => btn.classList.remove("on");
+        }
+        synth.speak(u);
+      }catch(e){ /* stumm bleiben statt Fehlermeldung */ }
+    }
+  };
+})();
+
+const SPK = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+  <path d="M15.5 8.5a5 5 0 0 1 0 7"></path><path d="M18.5 5.5a9 9 0 0 1 0 13"></path></svg>`;
+
+function speakBtn(text){
+  if(!Speech.available) return "";
+  return `<button class="speak" data-say="${esc(text)}" title="Aussprache anhören"
+    aria-label="Aussprache von ${esc(text)} anhören">${SPK}</button>`;
+}
+
+/* =========================================================================
+   HILFSFUNKTIONEN
+   ========================================================================= */
+const shuffle = a => a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(p=>p[1]);
+const esc = s => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function normalise(s){
+  return s.toLowerCase().trim()
+    .replace(/^(to|the|a|an)\s+/,"")
+    .replace(/[.,;!?'"’]/g,"")
+    .replace(/\s+/g," ");
+}
+function distance(a,b){
+  const m=a.length,n=b.length,d=Array.from({length:m+1},(_,i)=>[i,...Array(n).fill(0)]);
+  for(let j=0;j<=n;j++) d[0][j]=j;
+  for(let i=1;i<=m;i++) for(let j=1;j<=n;j++)
+    d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));
+  return d[m][n];
+}
+function checkTyped(input, target){
+  const a=normalise(input), b=normalise(target);
+  if(!a) return "no";
+  if(a===b) return "ok";
+  // Mehrere zulässige Übersetzungen, durch Komma getrennt
+  if(b.split(",").map(s=>s.trim()).includes(a)) return "ok";
+  const tol = b.length > 6 ? 2 : 1;
+  return distance(a,b) <= tol ? "near" : "no";
+}
+function markExample(sentence, word){
+  const stem = word.replace(/^to\s+/i,"").split(/[\s/]/)[0].slice(0, Math.max(4, word.length-3));
+  const re = new RegExp("("+stem.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"\\w*)","i");
+  return esc(sentence).replace(re,"<b>$1</b>");
+}
+
+/* =========================================================================
+   ZUSTAND
+   ========================================================================= */
+const S = {
+  view:"home",
+  topicId:null,
+  dir:"en2de",          // en2de | de2en
+  mode:"card",          // card | mc | type
+  onlyDue:true,
+  queue:[], i:0, revealed:false, answered:null, landed:null,
+  seen:0
+};
+const view = document.getElementById("view");
+const dirLabel = () => S.dir==="en2de" ? "EN → DE" : "DE → EN";
+const askSide  = v => S.dir==="en2de" ? v.en : v.de;
+const ansSide  = v => S.dir==="en2de" ? v.de : v.en;
+
+/* =========================================================================
+   STARTSEITE
+   ========================================================================= */
+function renderHome(){
+  const years = [...new Set(TOPICS.map(t=>t.year))];
+  let h = "";
+  for(const y of years){
+    const group = TOPICS.filter(t=>t.year===y);
+    h += `<section class="yeargroup">
+      <div class="yearhead"><span class="tag">${y}</span>
+      <span class="name">${esc(group[0].yearName)}</span></div>`;
+    for(const t of group){
+      const total = SETS[t.id] ? SETS[t.id].length : 0;
+      const due = total ? dueCount(t.id, S.dir) : 0;
+      const c = total ? boxCounts(t.id, S.dir) : [0,0,0,0,0];
+      const known = c[2]+c[3]+c[4];
+      const filled = total ? Math.round(known/total*5) : 0;
+      h += `<button class="topic" data-topic="${t.id}" ${total?"":"disabled"}>
+        <span class="t-row">
+          <span class="t-name">${esc(t.name)}</span>
+          <span class="t-count">${total ? (due?`<span class="t-due">${due} fällig</span> · `:"") + total + " Vok." : "leer"}</span>
+        </span>
+        <span class="minirail">${[0,1,2,3,4].map(k=>`<i class="${k<filled?"f":""}"></i>`).join("")}</span>
+      </button>`;
+    }
+    h += `</section>`;
+  }
+  h += `<div class="emptyhint">Wähle ein Thema. Der Fortschritt wird pro Abfragerichtung
+        (${dirLabel()}) getrennt gespeichert und bleibt auf diesem Gerät.</div>`;
+  view.innerHTML = h;
+  view.querySelectorAll("[data-topic]").forEach(b =>
+    b.addEventListener("click", () => startSession(b.dataset.topic)));
+  updateFoot();
+}
+
+/* =========================================================================
+   SITZUNG
+   ========================================================================= */
+function buildQueue(){
+  const all = SETS[S.topicId];
+  const pool = S.onlyDue ? all.filter(v=>isDue(rec(S.topicId,S.dir,v.id))) : all;
+  S.queue = shuffle(pool.length ? pool : all);
+  S.i = 0; S.revealed = false; S.answered = null;
+}
+function startSession(topicId){
+  S.topicId = topicId; S.view = "session"; S.seen = 0;
+  buildQueue(); render();
+}
+function current(){ return S.queue[S.i]; }
+
+function renderSession(){
+  if(S.i >= S.queue.length){ renderDone(); return; }
+  const v = current();
+  const r = rec(S.topicId, S.dir, v.id);
+  const topic = TOPICS.find(t=>t.id===S.topicId);
+
+  const rail = [1,2,3,4,5].map(n=>{
+    const cls = (n===r.box?"here":"") + (S.landed===n?" land":"");
+    return `<div class="slot ${cls}"><div class="n">FACH ${n}</div>
+      <div class="c">${boxCounts(S.topicId,S.dir)[n-1]}</div>
+      <div class="iv">${n===1?"sofort":INTERVALS[n]+" d"}</div></div>`;
+  }).join("");
+
+  let body = `<div class="eyebrow">
+      <span>${esc(topic.name)}</span>
+      <span>${S.i+1} / ${S.queue.length}</span>
+    </div>`;
+
+  if(S.mode === "card"){
+    body += promptBlock(v);
+    if(S.revealed){
+      body += answerBlock(v);
+    }
+    body += `<div class="spacer"></div>`;
+  }
+
+  if(S.mode === "mc"){
+    if(!S.options) S.options = shuffle([v, ...buildDistractors(v)]);
+    body += promptBlock(v) + `<div class="opts">`;
+    for(const o of S.options){
+      let cls = "";
+      if(S.answered){
+        if(o.id===v.id) cls = "right";
+        else if(o.id===S.answered) cls = "wrong";
+      }
+      body += `<button class="opt ${cls}" data-opt="${o.id}" ${S.answered?"disabled":""}>
+        ${esc(ansSide(o))}</button>`;
+    }
+    body += `</div>`;
+    if(S.answered) body += answerBlock(v, true);
+    body += `<div class="spacer"></div>`;
+  }
+
+  if(S.mode === "type"){
+    body += promptBlock(v) + `
+      <div class="typebox">
+        <input id="typeIn" placeholder="${S.dir==="en2de"?"Deutsche Bedeutung":"English word"}"
+               autocomplete="off" autocapitalize="off" spellcheck="false" ${S.answered?"disabled":""}>
+        <div class="verdict" id="verdict"></div>
+      </div>`;
+    if(S.answered) body += answerBlock(v, true);
+    body += `<div class="spacer"></div>`;
+  }
+
+  const controls = S.revealed || S.answered
+    ? `<button class="rate again" data-rate="0">Nochmal<span>1</span></button>
+       <button class="rate hard"  data-rate="1">Unsicher<span>2</span></button>
+       <button class="rate good"  data-rate="2">Gewusst<span>3</span></button>`
+    : (S.mode==="card"
+        ? `<button class="primary" id="flip">Umdrehen <span style="opacity:.6">(Leertaste)</span></button>`
+        : (S.mode==="type" ? `<button class="primary" id="submit">Prüfen (Enter)</button>` : ""));
+
+  view.innerHTML = `
+    <div class="sessionbar">
+      <button class="linkbtn" id="back">← Themenübersicht</button>
+      <div class="switches">
+        <button class="switch" data-mode="card" aria-pressed="${S.mode==="card"}">Karteikarte</button>
+        <button class="switch" data-mode="mc"   aria-pressed="${S.mode==="mc"}">Auswahl</button>
+        <button class="switch" data-mode="type" aria-pressed="${S.mode==="type"}">Tippen</button>
+        <button class="switch" id="dirBtn">${dirLabel()}</button>
+      </div>
+    </div>
+    <div class="rail">${rail}</div>
+    <div class="stage"><div class="vcard deal">${body}</div></div>
+    <div class="controls">${controls}</div>`;
+
+  bindSession();
+  const inp = document.getElementById("typeIn");
+  if(inp && !S.answered) inp.focus();
+  updateFoot();
+}
+
+function promptBlock(v){
+  const englishAsked = S.dir === "en2de";
+  const phon = englishAsked && (v.ipa || Speech.available)
+    ? `<div class="phon">
+         ${v.ipa ? `<span class="ipa">/${esc(v.ipa)}/</span>` : ""}
+         ${speakBtn(v.en)}
+       </div>`
+    : "";
+  return `<h2 class="prompt">${esc(askSide(v))}</h2>
+    <div class="pos">${esc(v.pos)}</div>${phon}`;
+}
+
+/* Distraktoren: erst die gepflegten Verwechslungskandidaten, dann Zufall
+   aus demselben Thema. Freie Paare bekommen eine synthetische ID. */
+function buildDistractors(v){
+  const out = [];
+  const set = SETS[S.topicId];
+  let n = 0;
+  for(const h of (v.distractor_hint || [])){
+    if(typeof h === "string"){
+      const found = set.find(x => x.id === h);
+      if(found && found.id !== v.id) out.push(found);
+    }else if(h && h.en && h.de){
+      out.push({id:"hint-"+v.id+"-"+(n++), en:h.en, de:h.de, pos:v.pos, hint:true});
+    }
+  }
+  const used = new Set([v.id, ...out.map(o=>o.id)]);
+  const rest = shuffle(set.filter(x => !used.has(x.id)));
+  return [...out, ...rest].slice(0,3);
+}
+
+function answerBlock(v, compact){
+  const englishIsAnswer = S.dir === "de2en";
+  const phon = englishIsAnswer && (v.ipa || Speech.available)
+    ? `<div class="phon">
+         ${v.ipa ? `<span class="ipa">/${esc(v.ipa)}/</span>` : ""}
+         ${speakBtn(v.en)}
+       </div>`
+    : "";
+  return `<div class="answer">
+    ${compact ? "" : `<div class="de">${esc(ansSide(v))}</div>`}
+    ${phon}
+    ${v.collocations ? `<div class="coll">${esc(v.collocations)}</div>` : ""}
+    ${v.example_en ? `<div class="ex">${markExample(v.example_en, v.en)}
+      ${speakBtn(v.example_en)}</div>` : ""}
+  </div>`;
+}
+
+function bindSession(){
+  document.getElementById("back").onclick = () => { S.view="home"; S.options=null; render(); };
+  document.getElementById("dirBtn").onclick = () => {
+    S.dir = S.dir==="en2de" ? "de2en" : "en2de";
+    S.options=null; buildQueue(); render();
+  };
+  view.querySelectorAll("[data-mode]").forEach(b => b.onclick = () => {
+    S.mode = b.dataset.mode; S.revealed=false; S.answered=null; S.options=null; render();
+  });
+  const flip = document.getElementById("flip");
+  if(flip) flip.onclick = () => { S.revealed = true; render(); };
+
+  view.querySelectorAll("[data-opt]").forEach(b => b.onclick = () => {
+    S.answered = b.dataset.opt; render();
+  });
+
+  const sub = document.getElementById("submit");
+  if(sub) sub.onclick = submitTyped;
+
+  view.querySelectorAll("[data-rate]").forEach(b =>
+    b.onclick = () => rate(Number(b.dataset.rate)));
+
+  view.querySelectorAll("[data-say]").forEach(b => b.onclick = ev => {
+    ev.stopPropagation();
+    Speech.say(b.dataset.say, b);
+  });
+}
+
+function submitTyped(){
+  const inp = document.getElementById("typeIn");
+  if(!inp) return;
+  const v = current();
+  const res = checkTyped(inp.value, ansSide(v));
+  S.answered = res;
+  render();
+  const el = document.getElementById("verdict");
+  if(el){
+    el.className = "verdict " + res;
+    el.innerHTML = res==="ok"   ? "Richtig."
+                 : res==="near" ? `Fast – Schreibweise prüfen.<span class="sol">${esc(ansSide(v))}</span>`
+                 :                `Noch nicht.<span class="sol">${esc(ansSide(v))}</span>`;
+  }
+}
+
+function rate(quality){
+  const v = current();
+  const r = rec(S.topicId, S.dir, v.id);
+  if(quality === 0)       r.box = 1;
+  else if(quality === 1)  r.box = Math.max(1, r.box - 1);
+  else                    r.box = Math.min(5, r.box + 1);
+  r.due = Date.now() + INTERVALS[r.box] * DAY;
+  save();
+  S.landed = r.box;
+  S.seen++;
+  S.i++; S.revealed=false; S.answered=null; S.options=null;
+  render();
+  setTimeout(()=>{ S.landed=null; }, 500);
+}
+
+function renderDone(){
+  const c = boxCounts(S.topicId, S.dir);
+  const total = SETS[S.topicId].length;
+  view.innerHTML = `<div class="done">
+    <h2>Durchgang beendet</h2>
+    <p>${S.seen} Karten bearbeitet · ${c[4]} von ${total} in Fach 5</p>
+    <div class="controls">
+      <button class="primary" id="again">Weiter üben</button>
+      <button id="home">Themenübersicht</button>
+    </div></div>`;
+  document.getElementById("again").onclick = () => {
+    S.onlyDue = false; buildQueue(); S.seen = 0; render();
+  };
+  document.getElementById("home").onclick = () => { S.view="home"; render(); };
+  updateFoot();
+}
+
+/* =========================================================================
+   TASTATUR
+   ========================================================================= */
+document.addEventListener("keydown", e => {
+  if(S.view !== "session") return;
+  const typing = document.activeElement && document.activeElement.id === "typeIn";
+  if(typing && e.key === "Enter"){ e.preventDefault(); submitTyped(); return; }
+  if(typing && !S.answered) return;
+  if((e.key === "s" || e.key === "S") && current()){
+    e.preventDefault(); Speech.say(current().en); return;
+  }
+  if(e.key === " " && S.mode === "card" && !S.revealed){
+    e.preventDefault(); S.revealed = true; render(); return;
+  }
+  if((S.revealed || S.answered) && ["1","2","3"].includes(e.key)){
+    e.preventDefault(); rate(Number(e.key) - 1);
+  }
+});
+
+/* =========================================================================
+   EXPORT / IMPORT
+   ========================================================================= */
+document.getElementById("exportBtn").onclick = () => {
+  const blob = new Blob([JSON.stringify(progress,null,1)],{type:"application/json"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "vokabelfortschritt.json";
+  a.click();
+  URL.revokeObjectURL(a.href);
+};
+document.getElementById("importBtn").onclick = () => document.getElementById("importFile").click();
+document.getElementById("importFile").onchange = ev => {
+  const f = ev.target.files[0]; if(!f) return;
+  const fr = new FileReader();
+  fr.onload = () => {
+    try{ progress = JSON.parse(fr.result); save(); render(); }
+    catch(e){ alert("Die Datei konnte nicht gelesen werden."); }
+  };
+  fr.readAsText(f);
+};
+
+function updateFoot(){
+  let done = 0, all = 0;
+  for(const t of TOPICS){
+    if(!SETS[t.id]) continue;
+    all += SETS[t.id].length;
+    done += boxCounts(t.id, S.dir).slice(2).reduce((a,b)=>a+b,0);
+  }
+  document.getElementById("footstat").textContent =
+    `${done}/${all} SICHER · ${dirLabel()}`;
+}
+
+/* =========================================================================
+   START
+   ========================================================================= */
+function render(){ S.view === "home" ? renderHome() : renderSession(); }
+
+function showWarn(html){ document.getElementById("warn").innerHTML = html; }
+
+if(!Store.persistent){
+  showWarn(`<div class="warn"><b>Vorschau-Modus:</b> Dieser Browserkontext erlaubt keinen
+     dauerhaften Speicher. Der Fortschritt gilt nur fuer diese Sitzung. Lade die Datei
+     herunter und oeffne sie per Doppelklick \u2013 dort bleibt der Lernstand erhalten.</div>`);
+}
+
+try{
+  render();
+}catch(err){
+  showWarn('<div class="warn"><b>Beim Aufbau der Seite ist ein Fehler aufgetreten.</b><br>'
+    + '<span style="font-family:var(--mono);font-size:11px">' + err.message + '</span></div>');
+}
+</script>
