@@ -173,12 +173,80 @@ button.primary:hover{background:#0B4A54}
 .done p{color:var(--ink-soft);margin:0 0 20px}
 
 /* ---------- Fußzeile ---------- */
+.credit{margin-top:14px;padding-top:12px;border-top:1px solid var(--rule);
+  font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:var(--ink-soft)}
+@media print{ .credit{display:none} }
 .foot{margin-top:40px;padding-top:14px;border-top:1px solid var(--rule);
   display:flex;gap:16px;flex-wrap:wrap;align-items:center;
   font-family:var(--mono);font-size:11px;color:var(--ink-soft);letter-spacing:.04em}
 .foot button{padding:5px 9px;font-family:var(--mono);font-size:11px}
 .warn{background:#FBF2E6;border:1px solid var(--amber);color:#8A4E12;border-radius:var(--r);
   padding:9px 12px;font-size:13px;margin-bottom:20px;line-height:1.4}
+
+/* ---------- Lueckensatz ---------- */
+.cloze{font-family:var(--serif);font-size:22px;line-height:1.55;margin:0}
+.cloze .gap{display:inline-block;min-width:5.5em;border-bottom:2px solid var(--petrol);
+  text-align:center;color:var(--petrol);font-family:var(--mono);font-size:15px;
+  vertical-align:baseline;padding:0 4px}
+.cloze b{font-style:normal;font-weight:600;
+  box-shadow:inset 0 -.42em 0 rgba(14,90,102,.18)}
+.clue{font-family:var(--serif);font-size:16px;color:var(--ink-soft);margin-top:14px}
+.clue span{color:var(--ink)}
+
+/* ---------- Listenansicht ---------- */
+.listctl{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
+.listctl input[type=search]{flex:1;min-width:180px;font:inherit;font-size:15px;
+  padding:10px 13px;border:1px solid var(--rule);border-radius:var(--r);
+  background:var(--card);color:var(--ink);-webkit-appearance:none}
+.listctl input[type=search]:focus{outline:2px solid var(--petrol);outline-offset:1px}
+.listcount{font-family:var(--mono);font-size:11px;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--ink-soft);margin-bottom:16px}
+
+.lsec{background:var(--card);border:1px solid var(--rule);border-radius:var(--r);
+  margin-bottom:8px;overflow:hidden}
+.lsec > summary{cursor:pointer;padding:13px 15px;display:flex;justify-content:space-between;
+  align-items:baseline;gap:12px;list-style:none;font-weight:500}
+.lsec > summary::-webkit-details-marker{display:none}
+.lsec > summary:hover{background:var(--ground)}
+.lsec > summary .lyear{font-family:var(--mono);font-size:10px;letter-spacing:.08em;
+  background:var(--ink);color:var(--ground);border-radius:2px;padding:2px 6px;margin-right:9px}
+.lsec > summary .lnum{font-family:var(--mono);font-size:12px;color:var(--ink-soft);white-space:nowrap}
+.lsec[open] > summary{border-bottom:1px solid var(--rule)}
+.lbody{padding:4px 15px 12px}
+
+.vrow{display:grid;grid-template-columns:1fr 1fr;gap:4px 18px;
+  padding:9px 0;border-bottom:1px solid var(--ground);break-inside:avoid}
+.vrow:last-child{border-bottom:none}
+.ven{font-family:var(--serif);font-size:16px}
+.vipa{font-family:var(--mono);font-size:11.5px;color:var(--ink-soft);margin-left:7px;white-space:nowrap}
+.vpos{font-family:var(--serif);font-style:italic;font-size:12.5px;color:var(--ink-soft);margin-left:7px}
+.vde{font-size:14.5px}
+.vex{grid-column:1 / -1;font-family:var(--serif);font-style:italic;font-size:14px;
+  color:#31434D;padding-left:11px;border-left:2px solid var(--rule);margin-top:3px}
+.vlist.hide-ex .vex{display:none}
+.vlist.hide-ipa .vipa{display:none}
+.vrow.off{display:none}
+.lsec.off{display:none}
+.noresult{background:var(--card);border:1px dashed var(--rule);border-radius:var(--r);
+  padding:14px 16px;color:var(--ink-soft);font-size:14px}
+
+@media print{
+  body{background:#fff}
+  .wrap{max-width:none;padding:0}
+  .masthead{border-bottom:1px solid #000;margin-bottom:14px}
+  .sessionbar,.listctl,.foot,#warn,.listcount button{display:none!important}
+  .lsec{border:none;border-radius:0;margin:0 0 6mm;page-break-inside:auto}
+  .lsec + .lsec{page-break-before:always}
+  .lsec > summary{padding:0 0 4px;border-bottom:1px solid #000;font-size:14pt}
+  .lsec > summary .lnum{color:#000}
+  .lbody{padding:6px 0 0;columns:2;column-gap:10mm}
+  .vrow{grid-template-columns:1fr;gap:1px;padding:3px 0;
+    border-bottom:none;page-break-inside:avoid}
+  .ven{font-size:11pt}
+  .vde{font-size:10pt;color:#333}
+  .vipa{color:#555}
+  .vex{font-size:9.5pt;border-left:1px solid #999}
+}
 
 @media(max-width:560px){
   .prompt{font-size:30px}
@@ -204,6 +272,7 @@ button.primary:hover{background:#0B4A54}
     <button id="importBtn">Fortschritt laden</button>
     <input type="file" id="importFile" accept="application/json" hidden>
   </div>
+  <div class="credit">Erstellt von Michael Wieker - Thomas-Mann-Schule Luebeck</div>
 </div>
 
 <script>
@@ -2980,6 +3049,366 @@ const SETS = {
    "ipa": "njuˈtrɪʃn",
    "collocations": "poor nutrition",
    "example_en": "Poor nutrition in the first two years shapes everything that follows."
+  },
+  {
+   "id": "hea-22",
+   "en": "healthcare system",
+   "de": "Gesundheitssystem",
+   "pos": "noun",
+   "ipa": "ˈhelθkeə",
+   "example_en": "No healthcare system is judged by what it does for the healthy."
+  },
+  {
+   "id": "hea-23",
+   "en": "the NHS (National Health Service)",
+   "de": "der britische Gesundheitsdienst",
+   "pos": "abbreviation",
+   "example_en": "The NHS is free at the point of use and paid for through taxation.",
+   "distractor_hint": [
+    "hea-22"
+   ]
+  },
+  {
+   "id": "hea-24",
+   "en": "health insurance",
+   "de": "Krankenversicherung",
+   "pos": "noun",
+   "ipa": "ɪnˈʃʊərəns",
+   "example_en": "Health insurance decides who is treated before any doctor does."
+  },
+  {
+   "id": "hea-25",
+   "en": "GP (general practitioner)",
+   "de": "Hausarzt, Hausärztin",
+   "pos": "abbreviation",
+   "collocations": "to see a GP",
+   "example_en": "You have to see a GP before you can see anyone else."
+  },
+  {
+   "id": "hea-26",
+   "en": "waiting list",
+   "de": "Warteliste",
+   "pos": "noun",
+   "ipa": "ˈweɪtɪŋ",
+   "collocations": "to be on a waiting list",
+   "example_en": "The waiting list is the rationing that nobody has to announce."
+  },
+  {
+   "id": "hea-27",
+   "en": "ward",
+   "de": "Krankenhausstation",
+   "pos": "noun",
+   "ipa": "wɔːd",
+   "example_en": "The ward has eighteen beds and staff for twelve."
+  },
+  {
+   "id": "hea-28",
+   "en": "prescription",
+   "de": "Rezept, Verordnung",
+   "pos": "noun",
+   "ipa": "prɪˈskrɪpʃn",
+   "example_en": "The drug is available on prescription and unaffordable without one."
+  },
+  {
+   "id": "hea-29",
+   "en": "to prescribe sth.",
+   "de": "etwas verschreiben",
+   "pos": "verb",
+   "ipa": "prɪˈskraɪb",
+   "example_en": "Doctors prescribe exercise more readily than they used to.",
+   "distractor_hint": [
+    "hea-28"
+   ]
+  },
+  {
+   "id": "hea-30",
+   "en": "treatment",
+   "de": "Behandlung",
+   "pos": "noun",
+   "ipa": "ˈtriːtmənt",
+   "collocations": "to undergo treatment",
+   "example_en": "Treatment is available; getting to it is the problem.",
+   "distractor_hint": [
+    "hea-31"
+   ]
+  },
+  {
+   "id": "hea-31",
+   "en": "to treat sb.",
+   "de": "jdn. behandeln",
+   "pos": "verb",
+   "ipa": "triːt",
+   "example_en": "Nobody is treated worse for being unable to pay, in theory.",
+   "distractor_hint": [
+    "hea-30"
+   ]
+  },
+  {
+   "id": "hea-32",
+   "en": "caregiver",
+   "de": "Pflegeperson, Betreuende(r)",
+   "pos": "noun",
+   "ipa": "ˈkeəɡɪvə",
+   "example_en": "Most caregiving is unpaid and done by women over fifty."
+  },
+  {
+   "id": "hea-33",
+   "en": "palliative care",
+   "de": "Palliativversorgung",
+   "pos": "noun",
+   "ipa": "ˈpæliətɪv",
+   "example_en": "Palliative care treats the person when the illness can no longer be treated."
+  },
+  {
+   "id": "hea-34",
+   "en": "preventive care",
+   "de": "Vorsorge",
+   "pos": "noun",
+   "ipa": "prɪˈventɪv",
+   "example_en": "Preventive care is cheaper, less visible and always cut first.",
+   "distractor_hint": [
+    "hea-35"
+   ]
+  },
+  {
+   "id": "hea-35",
+   "en": "screening",
+   "de": "Vorsorgeuntersuchung, Reihenuntersuchung",
+   "pos": "noun",
+   "ipa": "ˈskriːnɪŋ",
+   "example_en": "Screening finds cases early and produces false alarms as a by-product.",
+   "distractor_hint": [
+    "hea-34"
+   ]
+  },
+  {
+   "id": "hea-36",
+   "en": "to diagnose sth.",
+   "de": "etwas diagnostizieren",
+   "pos": "verb",
+   "ipa": "ˈdaɪəɡnəʊz",
+   "example_en": "The condition is diagnosed late because the early signs are ordinary."
+  },
+  {
+   "id": "hea-37",
+   "en": "diagnosis (pl. diagnoses)",
+   "de": "Diagnose",
+   "pos": "noun",
+   "ipa": "ˌdaɪəɡˈnəʊsɪs",
+   "example_en": "A diagnosis explains the past and rarely predicts the future.",
+   "distractor_hint": [
+    "hea-36"
+   ]
+  },
+  {
+   "id": "hea-38",
+   "en": "symptom",
+   "de": "Symptom, Anzeichen",
+   "pos": "noun",
+   "ipa": "ˈsɪmptəm",
+   "example_en": "The symptoms appear weeks after the infection has passed."
+  },
+  {
+   "id": "hea-39",
+   "en": "chronic",
+   "de": "chronisch",
+   "pos": "adjective",
+   "ipa": "ˈkrɒnɪk",
+   "collocations": "a chronic condition",
+   "example_en": "A chronic condition is managed rather than cured.",
+   "distractor_hint": [
+    "hea-40"
+   ]
+  },
+  {
+   "id": "hea-40",
+   "en": "acute",
+   "de": "akut",
+   "pos": "adjective",
+   "ipa": "əˈkjuːt",
+   "example_en": "Acute cases are seen the same day; everyone else waits.",
+   "distractor_hint": [
+    "hea-39"
+   ]
+  },
+  {
+   "id": "hea-41",
+   "en": "contagious",
+   "de": "ansteckend (durch Kontakt)",
+   "pos": "adjective",
+   "ipa": "kənˈteɪdʒəs",
+   "example_en": "The illness is contagious for two days before anyone feels unwell."
+  },
+  {
+   "id": "hea-42",
+   "en": "outbreak",
+   "de": "Ausbruch",
+   "pos": "noun",
+   "ipa": "ˈaʊtbreɪk",
+   "example_en": "The outbreak was traced to a single wedding.",
+   "distractor_hint": [
+    "hea-43"
+   ]
+  },
+  {
+   "id": "hea-43",
+   "en": "epidemic",
+   "de": "Epidemie",
+   "pos": "noun",
+   "ipa": "ˌepɪˈdemɪk",
+   "example_en": "An epidemic is regional; a pandemic has stopped being.",
+   "distractor_hint": [
+    "hea-44"
+   ]
+  },
+  {
+   "id": "hea-44",
+   "en": "pandemic",
+   "de": "Pandemie",
+   "pos": "noun",
+   "ipa": "pænˈdemɪk",
+   "example_en": "The pandemic exposed inequalities that were already documented.",
+   "distractor_hint": [
+    "hea-43"
+   ]
+  },
+  {
+   "id": "hea-45",
+   "en": "quarantine",
+   "de": "Quarantäne",
+   "pos": "noun",
+   "ipa": "ˈkwɒrəntiːn",
+   "example_en": "Quarantine is one of the oldest public health measures there is."
+  },
+  {
+   "id": "hea-46",
+   "en": "vaccine",
+   "de": "Impfstoff",
+   "pos": "noun",
+   "ipa": "ˈvæksiːn",
+   "example_en": "The vaccine took eleven months and thirty years of prior research.",
+   "distractor_hint": [
+    "hea-47"
+   ]
+  },
+  {
+   "id": "hea-47",
+   "en": "to vaccinate sb.",
+   "de": "jdn. impfen",
+   "pos": "verb",
+   "ipa": "ˈvæksɪneɪt",
+   "example_en": "Children are vaccinated against diseases their grandparents survived.",
+   "distractor_hint": [
+    "hea-46"
+   ]
+  },
+  {
+   "id": "hea-48",
+   "en": "immunity",
+   "de": "Immunität",
+   "pos": "noun",
+   "ipa": "ɪˈmjuːnəti",
+   "collocations": "herd immunity",
+   "example_en": "Herd immunity protects the people who cannot be vaccinated."
+  },
+  {
+   "id": "hea-49",
+   "en": "antibiotic",
+   "de": "Antibiotikum",
+   "pos": "noun",
+   "ipa": "ˌæntibaɪˈɒtɪk",
+   "example_en": "Antibiotics are prescribed for conditions they cannot touch.",
+   "distractor_hint": [
+    "hea-50"
+   ]
+  },
+  {
+   "id": "hea-50",
+   "en": "antibiotic resistance",
+   "de": "Antibiotikaresistenz",
+   "pos": "noun",
+   "ipa": "rɪˈzɪstəns",
+   "example_en": "Antibiotic resistance is a slow emergency with no single moment to report.",
+   "distractor_hint": [
+    "hea-49"
+   ]
+  },
+  {
+   "id": "hea-51",
+   "en": "side effect",
+   "de": "Nebenwirkung",
+   "pos": "noun",
+   "example_en": "Every side effect is listed and almost none are common."
+  },
+  {
+   "id": "hea-52",
+   "en": "to be at risk of sth.",
+   "de": "gefährdet sein",
+   "pos": "phrase",
+   "ipa": "rɪsk",
+   "example_en": "Those at risk are known in advance and reached last."
+  },
+  {
+   "id": "hea-53",
+   "en": "public health",
+   "de": "öffentliche Gesundheit",
+   "pos": "noun",
+   "collocations": "a public health measure",
+   "example_en": "Public health measures work best when nobody notices them."
+  },
+  {
+   "id": "hea-54",
+   "en": "sanitation",
+   "de": "Abwasserentsorgung, sanitäre Versorgung",
+   "pos": "noun",
+   "ipa": "ˌsænɪˈteɪʃn",
+   "example_en": "Sanitation saved more lives in the nineteenth century than medicine did.",
+   "distractor_hint": [
+    "hea-55"
+   ]
+  },
+  {
+   "id": "hea-55",
+   "en": "hygiene",
+   "de": "Hygiene",
+   "pos": "noun",
+   "ipa": "ˈhaɪdʒiːn",
+   "example_en": "Hand hygiene in hospitals is measured because it is so easily skipped.",
+   "distractor_hint": [
+    "hea-54"
+   ]
+  },
+  {
+   "id": "hea-56",
+   "en": "malnutrition",
+   "de": "Mangelernährung",
+   "pos": "noun",
+   "ipa": "ˌmælnjuˈtrɪʃn",
+   "example_en": "Malnutrition and obesity now appear in the same households."
+  },
+  {
+   "id": "hea-57",
+   "en": "health inequality",
+   "de": "gesundheitliche Ungleichheit",
+   "pos": "noun",
+   "ipa": "ˌɪnɪˈkwɒləti",
+   "example_en": "Health inequality is measured in years and mapped by postcode."
+  },
+  {
+   "id": "hea-58",
+   "en": "infant mortality",
+   "de": "Säuglingssterblichkeit",
+   "pos": "noun",
+   "ipa": "mɔːˈtæləti",
+   "example_en": "Infant mortality is the figure that says most about a society."
+  },
+  {
+   "id": "hea-59",
+   "en": "mental health",
+   "de": "psychische Gesundheit",
+   "pos": "noun",
+   "ipa": "ˈmentl",
+   "example_en": "Mental health services were the first cut and the last restored."
   }
  ],
  "e-sustain": [
@@ -6095,6 +6524,339 @@ const SETS = {
    "ipa": "dɪsˈmæntl",
    "collocations": "to dismantle an empire",
    "example_en": "Britain dismantled its empire far more quickly than it had built it."
+  },
+  {
+   "id": "emp-07",
+   "en": "empire",
+   "de": "Reich, Imperium",
+   "pos": "noun",
+   "ipa": "ˈempaɪə",
+   "collocations": "to build an empire",
+   "example_en": "At its height the empire covered a quarter of the world's land.",
+   "distractor_hint": [
+    "emp-08"
+   ]
+  },
+  {
+   "id": "emp-08",
+   "en": "imperialism",
+   "de": "Imperialismus",
+   "pos": "noun",
+   "ipa": "ɪmˈpɪəriəlɪzəm",
+   "example_en": "Imperialism described itself as trade long before it admitted to being rule.",
+   "distractor_hint": [
+    "emp-07"
+   ]
+  },
+  {
+   "id": "emp-09",
+   "en": "imperial",
+   "de": "kaiserlich, Reichs-",
+   "pos": "adjective",
+   "ipa": "ɪmˈpɪəriəl",
+   "collocations": "imperial rule",
+   "example_en": "Imperial policy was made in London and improvised everywhere else."
+  },
+  {
+   "id": "emp-10",
+   "en": "colony",
+   "de": "Kolonie",
+   "pos": "noun",
+   "ipa": "ˈkɒləni",
+   "example_en": "A colony was governed for the benefit of the country that held it.",
+   "distractor_hint": [
+    "emp-11"
+   ]
+  },
+  {
+   "id": "emp-11",
+   "en": "to colonise",
+   "de": "kolonisieren, besiedeln",
+   "pos": "verb",
+   "ipa": "ˈkɒlənaɪz",
+   "example_en": "The islands were colonised twice, by two powers, within forty years.",
+   "distractor_hint": [
+    "emp-10"
+   ]
+  },
+  {
+   "id": "emp-12",
+   "en": "colonial rule",
+   "de": "Kolonialherrschaft",
+   "pos": "noun",
+   "ipa": "kəˈləʊniəl",
+   "example_en": "Colonial rule lasted three generations and is argued about in five."
+  },
+  {
+   "id": "emp-13",
+   "en": "settler",
+   "de": "Siedler(in)",
+   "pos": "noun",
+   "ipa": "ˈsetlə",
+   "example_en": "Settlers were granted land that the maps described as empty."
+  },
+  {
+   "id": "emp-14",
+   "en": "to annex sth.",
+   "de": "etwas annektieren",
+   "pos": "verb",
+   "ipa": "əˈneks",
+   "example_en": "The territory was annexed in 1843 without a treaty of any kind.",
+   "distractor_hint": [
+    "emp-15"
+   ]
+  },
+  {
+   "id": "emp-15",
+   "en": "conquest",
+   "de": "Eroberung",
+   "pos": "noun",
+   "ipa": "ˈkɒŋkwest",
+   "example_en": "The conquest took four months; the administration took a century.",
+   "distractor_hint": [
+    "emp-14"
+   ]
+  },
+  {
+   "id": "emp-16",
+   "en": "to subdue sb.",
+   "de": "jdn. unterwerfen, niederwerfen",
+   "pos": "verb",
+   "ipa": "səbˈdjuː",
+   "example_en": "The region was subdued by force and governed through local rulers.",
+   "distractor_hint": [
+    "emp-01"
+   ]
+  },
+  {
+   "id": "emp-17",
+   "en": "protectorate",
+   "de": "Protektorat",
+   "pos": "noun",
+   "ipa": "prəˈtektərət",
+   "example_en": "A protectorate was a colony that could be described as something else."
+  },
+  {
+   "id": "emp-18",
+   "en": "dominion",
+   "de": "Dominion, Herrschaftsgebiet",
+   "pos": "noun",
+   "ipa": "dəˈmɪniən",
+   "example_en": "Canada became a dominion in 1867 and stayed loyal for two wars."
+  },
+  {
+   "id": "emp-19",
+   "en": "viceroy",
+   "de": "Vizekönig",
+   "pos": "noun",
+   "ipa": "ˈvaɪsrɔɪ",
+   "example_en": "The viceroy answered to the Crown and to nobody in the country he ruled."
+  },
+  {
+   "id": "emp-20",
+   "en": "the Commonwealth",
+   "de": "das Commonwealth",
+   "pos": "noun",
+   "ipa": "ˈkɒmənwelθ",
+   "example_en": "The Commonwealth is what remained when the empire was renamed."
+  },
+  {
+   "id": "emp-21",
+   "en": "the East India Company",
+   "de": "die Ostindien-Kompanie",
+   "pos": "noun",
+   "example_en": "The East India Company ruled a subcontinent before any government did."
+  },
+  {
+   "id": "emp-22",
+   "en": "trading post",
+   "de": "Handelsniederlassung",
+   "pos": "noun",
+   "ipa": "ˈtreɪdɪŋ",
+   "example_en": "What began as a trading post ended as a garrison."
+  },
+  {
+   "id": "emp-23",
+   "en": "plantation",
+   "de": "Plantage",
+   "pos": "noun",
+   "ipa": "plænˈteɪʃn",
+   "collocations": "a sugar plantation",
+   "example_en": "The sugar plantations depended on labour that could not leave.",
+   "distractor_hint": [
+    "emp-24"
+   ]
+  },
+  {
+   "id": "emp-24",
+   "en": "indentured labour",
+   "de": "Kontraktarbeit, Schuldknechtschaft",
+   "pos": "noun",
+   "ipa": "ɪnˈdentʃəd",
+   "example_en": "Indentured labour replaced slavery and repeated much of it.",
+   "distractor_hint": [
+    "emp-23"
+   ]
+  },
+  {
+   "id": "emp-25",
+   "en": "the slave trade",
+   "de": "der Sklavenhandel",
+   "pos": "noun",
+   "ipa": "sleɪv",
+   "example_en": "The slave trade was abolished twenty-six years before slavery itself.",
+   "distractor_hint": [
+    "emp-26"
+   ]
+  },
+  {
+   "id": "emp-26",
+   "en": "abolition",
+   "de": "Abschaffung",
+   "pos": "noun",
+   "ipa": "ˌæbəˈlɪʃn",
+   "collocations": "the abolition of slavery",
+   "example_en": "Abolition was won in Parliament and paid for by compensating the owners.",
+   "distractor_hint": [
+    "emp-25"
+   ]
+  },
+  {
+   "id": "emp-27",
+   "en": "abolitionist",
+   "de": "Abolitionist(in)",
+   "pos": "noun",
+   "ipa": "ˌæbəˈlɪʃənɪst",
+   "example_en": "Abolitionists organised the first consumer boycott in British history."
+  },
+  {
+   "id": "emp-28",
+   "en": "to plunder sth.",
+   "de": "plündern",
+   "pos": "verb",
+   "ipa": "ˈplʌndə",
+   "example_en": "Objects plundered in 1897 are still displayed as acquisitions.",
+   "distractor_hint": [
+    "emp-29"
+   ]
+  },
+  {
+   "id": "emp-29",
+   "en": "restitution",
+   "de": "Rückgabe, Restitution",
+   "pos": "noun",
+   "ipa": "ˌrestɪˈtjuːʃn",
+   "collocations": "the restitution of artefacts",
+   "example_en": "Restitution debates turn on ownership and end up about memory.",
+   "distractor_hint": [
+    "emp-28"
+   ]
+  },
+  {
+   "id": "emp-30",
+   "en": "tribute",
+   "de": "Tribut, Abgabe",
+   "pos": "noun",
+   "ipa": "ˈtrɪbjuːt",
+   "collocations": "to demand tribute",
+   "example_en": "Local rulers were left in place and required to pay tribute."
+  },
+  {
+   "id": "emp-31",
+   "en": "missionary",
+   "de": "Missionar(in)",
+   "pos": "noun",
+   "ipa": "ˈmɪʃənri",
+   "example_en": "Missionaries arrived before the administrators and stayed after them."
+  },
+  {
+   "id": "emp-32",
+   "en": "civilising mission",
+   "de": "Zivilisierungsmission",
+   "pos": "noun",
+   "ipa": "ˈsɪvəlaɪzɪŋ",
+   "example_en": "The civilising mission was the story the empire told about itself."
+  },
+  {
+   "id": "emp-33",
+   "en": "the white man's burden",
+   "de": "die Bürde des weißen Mannes",
+   "pos": "noun",
+   "ipa": "ˈbɜːdn",
+   "example_en": "The phrase the white man's burden turned domination into duty.",
+   "distractor_hint": [
+    "emp-32"
+   ]
+  },
+  {
+   "id": "emp-34",
+   "en": "hegemony",
+   "de": "Vorherrschaft, Hegemonie",
+   "pos": "noun",
+   "ipa": "hɪˈdʒeməni",
+   "example_en": "Naval hegemony mattered more than the size of any army."
+  },
+  {
+   "id": "emp-35",
+   "en": "uprising",
+   "de": "Aufstand, Erhebung",
+   "pos": "noun",
+   "ipa": "ˈʌpraɪzɪŋ",
+   "collocations": "to crush an uprising",
+   "example_en": "The uprising of 1857 changed how the territory was governed.",
+   "distractor_hint": [
+    "emp-36"
+   ]
+  },
+  {
+   "id": "emp-36",
+   "en": "to crush sth.",
+   "de": "niederschlagen",
+   "pos": "verb",
+   "ipa": "krʌʃ",
+   "example_en": "The rebellion was crushed and then renamed a mutiny.",
+   "distractor_hint": [
+    "emp-35"
+   ]
+  },
+  {
+   "id": "emp-37",
+   "en": "independence movement",
+   "de": "Unabhängigkeitsbewegung",
+   "pos": "noun",
+   "ipa": "ˌɪndɪˈpendəns",
+   "example_en": "The independence movement used the legal language of the empire against it."
+  },
+  {
+   "id": "emp-38",
+   "en": "self-rule",
+   "de": "Selbstverwaltung",
+   "pos": "noun",
+   "example_en": "Self-rule was promised in wartime and postponed in peace."
+  },
+  {
+   "id": "emp-39",
+   "en": "partition",
+   "de": "Teilung",
+   "pos": "noun",
+   "ipa": "pɑːˈtɪʃn",
+   "example_en": "The partition of 1947 displaced more people than any European war."
+  },
+  {
+   "id": "emp-40",
+   "en": "decolonisation",
+   "de": "Dekolonisierung",
+   "pos": "noun",
+   "ipa": "ˌdiːkɒlənaɪˈzeɪʃn",
+   "example_en": "Decolonisation happened faster than anyone in London had planned for."
+  },
+  {
+   "id": "emp-41",
+   "en": "repercussions",
+   "de": "Nachwirkungen, Folgen",
+   "pos": "noun",
+   "ipa": "ˌriːpəˈkʌʃnz",
+   "example_en": "The repercussions of a border drawn in a week are still being felt."
   }
  ],
  "q1-postcol": [
@@ -14614,9 +15376,19 @@ function renderHome(){
   }
   h += `<div class="emptyhint">Wähle ein Thema. Der Fortschritt wird pro Abfragerichtung
         (${dirLabel()}) getrennt gespeichert und bleibt auf diesem Gerät.</div>`;
+  const grand = TOPICS.reduce((n,t) => n + (SETS[t.id] ? SETS[t.id].length : 0), 0);
+  h += `<button class="topic" id="allBtn" style="border-left-color:var(--petrol)">
+    <span class="t-row">
+      <span class="t-name">Alle Vokabeln ansehen</span>
+      <span class="t-count">${grand} Einträge</span>
+    </span>
+  </button>`;
+
   view.innerHTML = h;
   view.querySelectorAll("[data-topic]").forEach(b =>
     b.addEventListener("click", () => startSession(b.dataset.topic)));
+  const ab = document.getElementById("allBtn");
+  if(ab) ab.onclick = () => { S.view = "list"; render(); };
   updateFoot();
 }
 
@@ -14624,7 +15396,9 @@ function renderHome(){
    SITZUNG
    ========================================================================= */
 function buildQueue(){
-  const all = SETS[S.topicId];
+  let all = SETS[S.topicId];
+  if(S.mode === "cloze") all = all.filter(hasCloze);
+  if(!all.length){ S.queue = []; S.i = 0; return; }
   const pool = S.onlyDue ? all.filter(v=>isDue(rec(S.topicId,S.dir,v.id))) : all;
   S.queue = shuffle(pool.length ? pool : all);
   S.i = 0; S.revealed = false; S.answered = null;
@@ -14636,6 +15410,13 @@ function startSession(topicId){
 function current(){ return S.queue[S.i]; }
 
 function renderSession(){
+  if(!S.queue.length){
+    view.innerHTML = `<div class="done"><h2>Keine Karten</h2>
+      <p>In diesem Thema gibt es für den Lückensatz-Modus keine passenden Beispielsätze.</p>
+      <div class="controls"><button class="primary" id="home">Themenübersicht</button></div></div>`;
+    document.getElementById("home").onclick = () => { S.view="home"; S.mode="card"; render(); };
+    return;
+  }
   if(S.i >= S.queue.length){ renderDone(); return; }
   const v = current();
   const r = rec(S.topicId, S.dir, v.id);
@@ -14689,13 +15470,30 @@ function renderSession(){
     body += `<div class="spacer"></div>`;
   }
 
+  if(S.mode === "cloze"){
+    const cp = clozeParts(v);
+    body += '<div class="cloze">' + esc(cp.before)
+          + (S.answered ? '<b>' + esc(cp.word) + '</b>'
+                        : '<span class="gap">?</span>')
+          + esc(cp.after) + '</div>'
+          + '<div class="clue">gesucht: <span>' + esc(v.de) + '</span>'
+          + (v.pos ? ' \u00b7 ' + esc(v.pos) : "") + '</div>'
+          + '<div class="typebox">'
+          + '<input id="typeIn" placeholder="englisches Wort" autocomplete="off" '
+          + 'autocapitalize="off" spellcheck="false" ' + (S.answered ? "disabled" : "") + '>'
+          + '<div class="verdict" id="verdict"></div></div>';
+    if(S.answered) body += answerBlock(v, true);
+    body += '<div class="spacer"></div>';
+  }
+
   const controls = S.revealed || S.answered
     ? `<button class="rate again" data-rate="0">Nochmal<span>1</span></button>
        <button class="rate hard"  data-rate="1">Unsicher<span>2</span></button>
        <button class="rate good"  data-rate="2">Gewusst<span>3</span></button>`
     : (S.mode==="card"
         ? `<button class="primary" id="flip">Umdrehen <span style="opacity:.6">(Leertaste)</span></button>`
-        : (S.mode==="type" ? `<button class="primary" id="submit">Prüfen (Enter)</button>` : ""));
+        : ((S.mode==="type" || S.mode==="cloze")
+            ? `<button class="primary" id="submit">Prüfen (Enter)</button>` : ""));
 
   view.innerHTML = `
     <div class="sessionbar">
@@ -14704,7 +15502,8 @@ function renderSession(){
         <button class="switch" data-mode="card" aria-pressed="${S.mode==="card"}">Karteikarte</button>
         <button class="switch" data-mode="mc"   aria-pressed="${S.mode==="mc"}">Auswahl</button>
         <button class="switch" data-mode="type" aria-pressed="${S.mode==="type"}">Tippen</button>
-        <button class="switch" id="dirBtn">${dirLabel()}</button>
+        <button class="switch" data-mode="cloze" aria-pressed="${S.mode==="cloze"}">Lückensatz</button>
+        ${S.mode==="cloze" ? "" : `<button class="switch" id="dirBtn">${dirLabel()}</button>`}
       </div>
     </div>
     <div class="rail">${rail}</div>
@@ -14716,6 +15515,38 @@ function renderSession(){
   if(inp && !S.answered) inp.focus();
   updateFoot();
 }
+
+/* Zerlegt den Beispielsatz in Teil vor der Vokabel, Vokabel, Teil danach.
+   Versucht zuerst die ganze Wendung, dann das erste Wort mit Endungen.
+   Gibt null zurueck, wenn die Vokabel im Satz nicht auffindbar ist. */
+function clozeParts(v){
+  var ex = v.example_en;
+  if(!ex) return null;
+  var core = String(v.en).replace(/\([^)]*\)/g, " ").split("/")[0];
+  core = core.replace(/^\s*to\s+/i, "").replace(/\s+/g, " ").trim();
+  if(!core) return null;
+  var esc0 = function(x){ return x.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); };
+
+  var words = core.split(" ");
+  var tries = [];
+  if(words.length > 1){
+    tries.push(words.map(esc0).join("\\s+") + "\\w*");           // ganze Wendung
+    tries.push(esc0(words[words.length - 1]) + "\\w*");          // letztes Wort
+  }
+  var first = words[0];
+  tries.push(esc0(first.slice(0, Math.max(4, first.length - 3))) + "\\w*");
+
+  for(var i = 0; i < tries.length; i++){
+    var m = ex.match(new RegExp("(" + tries[i] + ")", "i"));
+    if(m && m.index !== undefined && m[1].length > 2){
+      return {before: ex.slice(0, m.index), word: m[1],
+              after: ex.slice(m.index + m[1].length), core: core};
+    }
+  }
+  return null;
+}
+
+function hasCloze(v){ return clozeParts(v) !== null; }
 
 function promptBlock(v){
   const englishAsked = S.dir === "en2de";
@@ -14767,12 +15598,16 @@ function answerBlock(v, compact){
 
 function bindSession(){
   document.getElementById("back").onclick = () => { S.view="home"; S.options=null; render(); };
-  document.getElementById("dirBtn").onclick = () => {
+  const dirB = document.getElementById("dirBtn");
+  if(dirB) dirB.onclick = () => {
     S.dir = S.dir==="en2de" ? "de2en" : "en2de";
     S.options=null; buildQueue(); render();
   };
   view.querySelectorAll("[data-mode]").forEach(b => b.onclick = () => {
-    S.mode = b.dataset.mode; S.revealed=false; S.answered=null; S.options=null; render();
+    const was = S.mode;
+    S.mode = b.dataset.mode; S.revealed=false; S.answered=null; S.options=null;
+    if(was === "cloze" || S.mode === "cloze") buildQueue();
+    render();
   });
   const flip = document.getElementById("flip");
   if(flip) flip.onclick = () => { S.revealed = true; render(); };
@@ -14797,15 +15632,26 @@ function submitTyped(){
   const inp = document.getElementById("typeIn");
   if(!inp) return;
   const v = current();
-  const res = checkTyped(inp.value, ansSide(v));
+  let res;
+  if(S.mode === "cloze"){
+    const cp = clozeParts(v);
+    res = checkTyped(inp.value, cp.word);
+    if(res !== "ok") {
+      const alt = checkTyped(inp.value, cp.core);
+      if(alt === "ok" || (alt === "near" && res === "no")) res = alt;
+    }
+  }else{
+    res = checkTyped(inp.value, ansSide(v));
+  }
   S.answered = res;
   render();
   const el = document.getElementById("verdict");
   if(el){
     el.className = "verdict " + res;
+    const sol = S.mode === "cloze" ? clozeParts(v).word : ansSide(v);
     el.innerHTML = res==="ok"   ? "Richtig."
-                 : res==="near" ? `Fast – Schreibweise prüfen.<span class="sol">${esc(ansSide(v))}</span>`
-                 :                `Noch nicht.<span class="sol">${esc(ansSide(v))}</span>`;
+                 : res==="near" ? `Fast – Schreibweise prüfen.<span class="sol">${esc(sol)}</span>`
+                 :                `Noch nicht.<span class="sol">${esc(sol)}</span>`;
   }
 }
 
@@ -14839,6 +15685,161 @@ function renderDone(){
   };
   document.getElementById("home").onclick = () => { S.view="home"; render(); };
   updateFoot();
+}
+
+/* =========================================================================
+   LISTENANSICHT
+   Reine Anzeige: liest die Vokabeln, schreibt nichts und ruehrt den
+   Lernstand nicht an. Themen sind eingeklappt; die Suche oeffnet sie.
+   ========================================================================= */
+var LIST_PREFS = {ex:false, ipa:true};   // Beispielsaetze aus, Lautschrift an
+
+function renderList(){
+  var grand = 0, h = "";
+
+  for(var i = 0; i < TOPICS.length; i++){
+    var t = TOPICS[i];
+    var entries = SETS[t.id];
+    if(!entries || !entries.length) continue;
+    grand += entries.length;
+
+    h += '<details class="lsec" data-sec="' + t.id + '"><summary>'
+       + '<span><span class="lyear">' + esc(t.year) + '</span>' + esc(t.name) + '</span>'
+       + '<span class="lnum">' + entries.length + '</span></summary><div class="lbody">';
+
+    for(var j = 0; j < entries.length; j++){
+      var e = entries[j];
+      var hay = (e.en + " " + e.de + " " + (e.pos||"") + " "
+               + (e.collocations||"") + " " + (e.example_en||"")).toLowerCase();
+      h += '<div class="vrow" data-s="' + esc(hay) + '">'
+         + '<div><span class="ven">' + esc(e.en) + '</span>'
+         + (e.pos ? '<span class="vpos">' + esc(e.pos) + '</span>' : "")
+         + (e.ipa ? '<span class="vipa">/' + esc(e.ipa) + '/</span>' : "")
+         + '</div>'
+         + '<div class="vde">' + esc(e.de) + '</div>'
+         + (e.example_en ? '<div class="vex">' + esc(e.example_en) + '</div>' : "")
+         + '</div>';
+    }
+    h += "</div></details>";
+  }
+
+  view.innerHTML =
+      '<div class="sessionbar">'
+    +   '<button class="linkbtn" id="lback">\u2190 Themen\u00fcbersicht</button>'
+    +   '<div class="switches">'
+    +     '<button class="switch" id="lex" aria-pressed="' + LIST_PREFS.ex + '">Beispiels\u00e4tze</button>'
+    +     '<button class="switch" id="lipa" aria-pressed="' + LIST_PREFS.ipa + '">Lautschrift</button>'
+    +     '<button class="switch" id="lopen">Alle aufklappen</button>'
+    +     '<button class="switch" id="lprint">Drucken</button>'
+    +     '<button class="switch" id="lcsv">CSV</button>'
+    +   '</div>'
+    + '</div>'
+    + '<div class="listctl">'
+    +   '<input type="search" id="lq" placeholder="Suchen \u2013 englisch, deutsch oder im Beispielsatz" '
+    +     'autocomplete="off" autocapitalize="off" spellcheck="false">'
+    + '</div>'
+    + '<div class="listcount" id="lcount">' + grand + ' Vokabeln in '
+    +   Object.keys(SETS).length + ' Themen \u00b7 Thema antippen zum \u00d6ffnen</div>'
+    + '<div class="vlist" id="vlist">' + h + '</div>'
+    + '<div class="noresult" id="lnone" hidden>Kein Treffer.</div>';
+
+  var box = document.getElementById("vlist");
+  applyListPrefs(box);
+
+  document.getElementById("lback").onclick = function(){ S.view = "home"; render(); };
+  document.getElementById("lex").onclick = function(){
+    LIST_PREFS.ex = !LIST_PREFS.ex;
+    this.setAttribute("aria-pressed", LIST_PREFS.ex);
+    applyListPrefs(box);
+  };
+  document.getElementById("lipa").onclick = function(){
+    LIST_PREFS.ipa = !LIST_PREFS.ipa;
+    this.setAttribute("aria-pressed", LIST_PREFS.ipa);
+    applyListPrefs(box);
+  };
+  document.getElementById("lopen").onclick = function(){
+    var secs = box.querySelectorAll("details.lsec");
+    var anyClosed = false;
+    for(var i = 0; i < secs.length; i++){ if(!secs[i].open) anyClosed = true; }
+    for(var k = 0; k < secs.length; k++){ secs[k].open = anyClosed; }
+    this.textContent = anyClosed ? "Alle zuklappen" : "Alle aufklappen";
+  };
+  document.getElementById("lprint").onclick = function(){
+    try{ window.print(); }catch(e){}
+  };
+  document.getElementById("lcsv").onclick = function(){ exportCsv(box); };
+
+  var q = document.getElementById("lq");
+  q.oninput = function(){ filterList(box, q.value); };
+
+  updateFoot();
+}
+
+/* Exportiert die gerade sichtbaren Zeilen als Tabelle (Tab-getrennt,
+   mit BOM, damit Excel die Umlaute richtig liest). */
+function exportCsv(box){
+  var cols = ["Thema","en","de","pos","ipa","collocations","example_en"];
+  var rows = [cols.join("\t")];
+  var n = 0;
+
+  for(var i = 0; i < TOPICS.length; i++){
+    var t = TOPICS[i];
+    var entries = SETS[t.id];
+    if(!entries) continue;
+    var sec = box.querySelector('details[data-sec="' + t.id + '"]');
+    if(!sec || sec.className.indexOf("off") !== -1) continue;
+    var domRows = sec.querySelectorAll(".vrow");
+
+    for(var j = 0; j < entries.length; j++){
+      if(domRows[j] && domRows[j].className.indexOf("off") !== -1) continue;
+      var e = entries[j];
+      var cell = function(x){ return String(x == null ? "" : x).replace(/[\t\r\n]+/g, " "); };
+      rows.push([t.name, e.en, e.de, e.pos || "", e.ipa || "",
+                 e.collocations || "", e.example_en || ""].map(cell).join("\t"));
+      n++;
+    }
+  }
+
+  if(!n){ alert("Nichts zu exportieren \u2013 die Suche liefert keine Treffer."); return; }
+  try{
+    var blob = new Blob(["\ufeff" + rows.join("\n")], {type:"text/csv;charset=utf-8"});
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "vokabeln.csv";
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }catch(err){ alert("Der Export hat nicht funktioniert: " + err.message); }
+}
+
+function applyListPrefs(box){
+  box.className = "vlist" + (LIST_PREFS.ex ? "" : " hide-ex")
+                          + (LIST_PREFS.ipa ? "" : " hide-ipa");
+}
+
+function filterList(box, raw){
+  var term = String(raw || "").toLowerCase().trim();
+  var secs = box.querySelectorAll("details.lsec");
+  var hits = 0;
+
+  for(var i = 0; i < secs.length; i++){
+    var sec = secs[i];
+    var rows = sec.querySelectorAll(".vrow");
+    var shown = 0;
+    for(var j = 0; j < rows.length; j++){
+      var match = !term || rows[j].getAttribute("data-s").indexOf(term) !== -1;
+      rows[j].className = "vrow" + (match ? "" : " off");
+      if(match) shown++;
+    }
+    hits += shown;
+    sec.className = "lsec" + (shown ? "" : " off");
+    if(term) sec.open = shown > 0;
+  }
+
+  document.getElementById("lnone").hidden = !(term && hits === 0);
+  document.getElementById("lcount").textContent = term
+    ? hits + " Treffer f\u00fcr \u201e" + raw.trim() + "\u201c"
+    : box.querySelectorAll(".vrow").length + " Vokabeln in "
+      + Object.keys(SETS).length + " Themen \u00b7 Thema antippen zum \u00d6ffnen";
 }
 
 /* =========================================================================
@@ -14896,7 +15897,11 @@ function updateFoot(){
 /* =========================================================================
    START
    ========================================================================= */
-function render(){ S.view === "home" ? renderHome() : renderSession(); }
+function render(){
+  if(S.view === "home") return renderHome();
+  if(S.view === "list") return renderList();
+  return renderSession();
+}
 
 function showWarn(html){ document.getElementById("warn").innerHTML = html; }
 
