@@ -15260,16 +15260,16 @@ function dueCount(topicId, dir){
    ========================================================================= */
 const Speech = (function(){
   var synth = window.speechSynthesis;
-  if(!synth) return {available:false, say:function(){}};
+  if(!synth) return {available:false, say:function(){}, status:function(){ return "nicht unterstützt"; }};
 
   var voice = null;
-  var unlocked = false;
+  var last = "noch nichts abgespielt";
 
   function pick(){
     var vs = [];
     try{ vs = synth.getVoices() || []; }catch(e){ return; }
     vs = vs.filter(function(v){ return /^en/i.test(v.lang); });
-    if(!vs.length) return;                       // auf iOS anfangs leer
+    if(!vs.length) return;                        // auf iOS anfangs leer
     voice = vs.filter(function(v){ return /en[-_]GB/i.test(v.lang); })[0]
          || vs.filter(function(v){ return /en[-_]US/i.test(v.lang); })[0]
          || vs[0];
@@ -15279,36 +15279,52 @@ const Speech = (function(){
 
   return {
     available:true,
+
+    /* Zaehlt die geladenen Stimmen und meldet, was zuletzt passiert ist. */
+    status:function(){
+      var n = 0;
+      try{ n = (synth.getVoices() || []).length; }catch(e){}
+      return n + " Stimmen geladen \u00b7 " + (voice ? "gewählt: " + voice.name + " (" + voice.lang + ")"
+                                                     : "keine englische Stimme gefunden")
+           + " \u00b7 zuletzt: " + last;
+    },
+
     say:function(text, btn){
       try{
-        // 1. iOS verlangt, dass die erste Ausgabe direkt aus einer
-        //    Nutzeraktion stammt. Ein leerer Satz schaltet die Engine frei.
-        if(!unlocked){
-          unlocked = true;
-          try{ synth.speak(new SpeechSynthesisUtterance("")); }catch(e){}
-          pick();
+        // Laeuft schon etwas? Dann nur abbrechen und beenden. Niemals
+        // cancel() unmittelbar vor speak() aufrufen - iOS verschluckt sonst
+        // beides und bleibt stumm.
+        if(synth.speaking || synth.pending){
+          synth.cancel();
+          last = "abgebrochen";
+          if(btn) btn.classList.remove("on");
+          return;
         }
 
-        // 2. cancel() unmittelbar vor speak() bricht die Ausgabe auf iOS ab.
-        //    Nur abbrechen, wenn wirklich etwas laeuft.
-        if(synth.speaking || synth.pending){ synth.cancel(); }
+        // Stimmenliste im Moment des Antippens auffrischen; auf iOS ist sie
+        // beim Laden der Seite noch leer.
+        if(!voice) pick();
 
         var u = new SpeechSynthesisUtterance(String(text).replace(/^to\s+/i, ""));
         u.lang = "en-GB";
-        // 3. Eine Stimme aus einer veralteten Liste laesst iOS stumm bleiben.
-        //    Nur setzen, wenn sie jetzt tatsaechlich vorliegt.
-        if(voice){
-          try{ u.voice = voice; u.lang = voice.lang || "en-GB"; }catch(e){}
-        }
+        if(voice){ try{ u.voice = voice; u.lang = voice.lang || "en-GB"; }catch(e){} }
         u.rate = 0.9;
-        if(btn){
-          btn.classList.add("on");
-          u.onend = u.onerror = function(){ btn.classList.remove("on"); };
-        }
-        synth.speak(u);
-        // 4. Bekannter Haenger in WebKit: die Warteschlange pausiert von selbst.
+
+        last = "gestartet";
+        u.onstart = function(){ last = "spricht"; };
+        u.onend   = function(){ last = "fertig"; if(btn) btn.classList.remove("on"); };
+        u.onerror = function(ev){
+          last = "Fehler: " + ((ev && ev.error) ? ev.error : "unbekannt");
+          if(btn) btn.classList.remove("on");
+        };
+
+        if(btn) btn.classList.add("on");
+        synth.speak(u);                  // direkt aus der Nutzeraktion heraus
         if(synth.paused){ try{ synth.resume(); }catch(e){} }
-      }catch(e){ if(btn) btn.classList.remove("on"); }
+      }catch(e){
+        last = "Ausnahme: " + e.message;
+        if(btn) btn.classList.remove("on");
+      }
     }
   };
 })();
@@ -15776,6 +15792,9 @@ function renderHelp(){
   d.push('<h2>Aussprache</h2>');
   d.push('<p>Neben dem englischen Wort steht die Lautschrift, daneben ein Lautsprecher-Symbol. Antippen liest das Wort vor. Am Beispielsatz gibt es ein zweites, kleineres Symbol für den ganzen Satz. Am Computer geht es auch mit der Taste <span class="kbd">S</span>.</p>');
   d.push('<p>Die Stimme kommt von deinem Gerät und klingt je nach Handy unterschiedlich gut. Die Lautschrift ist die verlässlichere Angabe.</p>');
+  d.push('<p><button class="switch" id="sptest">Aussprache testen</button> '
+       + '<span id="spout" style="font-family:var(--mono);font-size:11.5px;color:var(--ink-soft)"></span></p>');
+  d.push('<p class="lead" style="font-size:13.5px">Hörst du nichts, prüfe am iPhone den Stummschalter an der linken Gehäusekante. Bleibt es still, gib die Zeile neben dem Knopf an deine Lehrkraft weiter.</p>');
 
   d.push('<h2>Tastatur am Computer</h2>');
   d.push('<table><tbody>'
@@ -15822,6 +15841,16 @@ function renderHelp(){
 
   document.getElementById("hback").onclick = function(){ S.view = "home"; render(); };
   document.getElementById("hprint").onclick = function(){ try{ window.print(); }catch(e){} };
+
+  var st = document.getElementById("sptest"), out = document.getElementById("spout");
+  if(st && out){
+    st.onclick = function(){
+      Speech.say("This is a test of the pronunciation.");
+      out.textContent = Speech.status();
+      setTimeout(function(){ out.textContent = Speech.status(); }, 1200);
+    };
+    out.textContent = Speech.status();
+  }
   updateFoot();
 }
 
