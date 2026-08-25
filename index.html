@@ -183,6 +183,34 @@ button.primary:hover{background:#0B4A54}
 .warn{background:#FBF2E6;border:1px solid var(--amber);color:#8A4E12;border-radius:var(--r);
   padding:9px 12px;font-size:13px;margin-bottom:20px;line-height:1.4}
 
+/* ---------- Anleitung ---------- */
+.doc{background:var(--card);border:1px solid var(--rule);border-radius:var(--r);
+  padding:26px 26px 30px;max-width:640px}
+.doc h2{font-family:var(--serif);font-weight:600;font-size:21px;margin:34px 0 8px;
+  letter-spacing:-.01em}
+.doc h2:first-child{margin-top:0}
+.doc h3{font-family:var(--sans);font-weight:600;font-size:15px;margin:20px 0 5px}
+.doc p{margin:0 0 12px;font-size:15px}
+.doc ul{margin:0 0 12px;padding-left:20px;font-size:15px}
+.doc li{margin-bottom:5px}
+.doc .lead{color:var(--ink-soft)}
+.doc code{font-family:var(--mono);font-size:12.5px;background:var(--ground);
+  padding:1px 5px;border-radius:2px}
+.doc table{border-collapse:collapse;width:100%;margin:6px 0 14px;font-size:14px}
+.doc th,.doc td{text-align:left;padding:6px 10px;border-bottom:1px solid var(--rule)}
+.doc th{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--ink-soft);font-weight:500}
+.doc td:first-child{font-family:var(--mono);font-size:12.5px;white-space:nowrap}
+.kbd{font-family:var(--mono);font-size:11.5px;border:1px solid var(--rule);
+  border-bottom-width:2px;border-radius:3px;padding:1px 6px;background:var(--ground)}
+.doc .warnbox{background:#FBF2E6;border:1px solid var(--amber);border-radius:var(--r);
+  padding:12px 14px;font-size:14.5px;margin:0 0 14px;line-height:1.5}
+.doc .teacher{border-top:2px solid var(--ink);margin-top:36px;padding-top:18px}
+@media print{
+  .doc{border:none;padding:0;max-width:none}
+  .doc h2{page-break-after:avoid}
+}
+
 /* ---------- Lueckensatz ---------- */
 .cloze{font-family:var(--serif);font-size:22px;line-height:1.55;margin:0}
 .cloze .gap{display:inline-block;min-width:5.5em;border-bottom:2px solid var(--petrol);
@@ -15384,11 +15412,20 @@ function renderHome(){
     </span>
   </button>`;
 
+  h += `<button class="topic" id="helpBtn" style="border-left-color:var(--petrol)">
+    <span class="t-row">
+      <span class="t-name">Anleitung</span>
+      <span class="t-count">So funktioniert die Seite</span>
+    </span>
+  </button>`;
+
   view.innerHTML = h;
   view.querySelectorAll("[data-topic]").forEach(b =>
     b.addEventListener("click", () => startSession(b.dataset.topic)));
   const ab = document.getElementById("allBtn");
   if(ab) ab.onclick = () => { S.view = "list"; render(); };
+  const hb = document.getElementById("helpBtn");
+  if(hb) hb.onclick = () => { S.view = "help"; render(); };
   updateFoot();
 }
 
@@ -15688,6 +15725,107 @@ function renderDone(){
 }
 
 /* =========================================================================
+   ANLEITUNG
+   Reine Anzeige. Text bewusst kurz gehalten: Schuelerinnen und Schueler
+   lesen das einmal, danach nie wieder.
+   ========================================================================= */
+function renderHelp(){
+  var d = [];
+
+  d.push('<h2>Wofür ist diese Seite?</h2>');
+  d.push('<p class="lead">Zum Lernen des Englisch-Vokabulars der Oberstufe. Alle Wörter sind nach Themen sortiert. Du kannst sie auf vier verschiedene Arten üben, und die Seite merkt sich, was du schon kannst.</p>');
+  d.push('<p>Es gibt keine Anmeldung und kein Passwort. Öffne einfach den Link.</p>');
+
+  d.push('<h2>Loslegen</h2>');
+  d.push('<ul>');
+  d.push('<li>Auf der Startseite ein Thema antippen.</li>');
+  d.push('<li>Die erste Karte erscheint. Überlege, dann tippe auf <b>Umdrehen</b>.</li>');
+  d.push('<li>Bewerte ehrlich: <b>Nochmal</b>, <b>Unsicher</b> oder <b>Gewusst</b>.</li>');
+  d.push('<li>Die nächste Karte kommt automatisch.</li>');
+  d.push('</ul>');
+  d.push('<p>Zurück zur Übersicht kommst du jederzeit oben links.</p>');
+
+  d.push('<h2>Die fünf Fächer</h2>');
+  d.push('<p>Das ist der wichtigste Teil. Oben über der Karte siehst du fünf Fächer. Jede Vokabel steckt in einem davon.</p>');
+  d.push('<p>Eine neue Vokabel startet in Fach 1. Antwortest du richtig, rückt sie ein Fach weiter. Antwortest du falsch, fällt sie zurück in Fach 1. Je weiter oben eine Vokabel steht, desto seltener siehst du sie wieder:</p>');
+  d.push('<table><thead><tr><th>Fach</th><th>Du siehst die Vokabel wieder</th></tr></thead><tbody>'
+       + '<tr><td>1</td><td>sofort im selben Durchgang</td></tr>'
+       + '<tr><td>2</td><td>nach 1 Tag</td></tr>'
+       + '<tr><td>3</td><td>nach 2 Tagen</td></tr>'
+       + '<tr><td>4</td><td>nach 4 Tagen</td></tr>'
+       + '<tr><td>5</td><td>nach 8 Tagen</td></tr>'
+       + '</tbody></table>');
+  d.push('<p>Dadurch übst du automatisch genau das, was dir schwerfällt, und verschwendest keine Zeit mit Wörtern, die längst sitzen. Damit das funktioniert, solltest du lieber <b>jeden Tag zehn Minuten</b> üben als einmal pro Woche eine Stunde.</p>');
+  d.push('<p>Die Zahl in jedem Fach zeigt, wie viele Vokabeln dieses Themas gerade dort liegen. Ziel ist, alles nach Fach 5 zu bekommen.</p>');
+
+  d.push('<h2>Die vier Übungsarten</h2>');
+  d.push('<p>Oben rechts kannst du umschalten. Alle vier greifen auf dieselben Vokabeln und dasselbe Fächersystem zu.</p>');
+  d.push('<h3>Karteikarte</h3>');
+  d.push('<p>Wort ansehen, überlegen, umdrehen, selbst bewerten. Am schnellsten, aber du musst ehrlich zu dir sein.</p>');
+  d.push('<h3>Auswahl</h3>');
+  d.push('<p>Vier Antworten, eine ist richtig. Gut zum Aufwärmen. Achtung: Wiedererkennen ist leichter als Wissen.</p>');
+  d.push('<h3>Tippen</h3>');
+  d.push('<p>Du schreibst die Übersetzung. Kleine Tippfehler werden verziehen und als „Fast" angezeigt. Das ist die ehrlichste Übung für eine Klausur.</p>');
+  d.push('<h3>Lückensatz</h3>');
+  d.push('<p>Ein englischer Beispielsatz mit einer Lücke, darunter die deutsche Bedeutung. Du schreibst das fehlende englische Wort. Hier lernst du nicht nur die Vokabel, sondern auch, wie sie im Satz benutzt wird — genau das brauchst du beim Schreiben.</p>');
+
+  d.push('<h2>Abfragerichtung</h2>');
+  d.push('<p>Mit dem Knopf <code>EN → DE</code> schaltest du um. <b>EN → DE</b> heißt: Du siehst Englisch und sagst die deutsche Bedeutung. <b>DE → EN</b> ist die schwerere und für Klausuren wichtigere Richtung.</p>');
+  d.push('<p>Beide Richtungen haben getrennte Fächer. Eine Vokabel kann in der einen Richtung in Fach 5 stehen und in der anderen in Fach 1.</p>');
+
+  d.push('<h2>Aussprache</h2>');
+  d.push('<p>Neben dem englischen Wort steht die Lautschrift, daneben ein Lautsprecher-Symbol. Antippen liest das Wort vor. Am Beispielsatz gibt es ein zweites, kleineres Symbol für den ganzen Satz. Am Computer geht es auch mit der Taste <span class="kbd">S</span>.</p>');
+  d.push('<p>Die Stimme kommt von deinem Gerät und klingt je nach Handy unterschiedlich gut. Die Lautschrift ist die verlässlichere Angabe.</p>');
+
+  d.push('<h2>Tastatur am Computer</h2>');
+  d.push('<table><tbody>'
+       + '<tr><td><span class="kbd">Leertaste</span></td><td>Karte umdrehen</td></tr>'
+       + '<tr><td><span class="kbd">1</span> <span class="kbd">2</span> <span class="kbd">3</span></td><td>Nochmal / Unsicher / Gewusst</td></tr>'
+       + '<tr><td><span class="kbd">Enter</span></td><td>Eingabe prüfen</td></tr>'
+       + '<tr><td><span class="kbd">S</span></td><td>Aussprache abspielen</td></tr>'
+       + '</tbody></table>');
+
+  d.push('<h2>Dein Lernstand</h2>');
+  d.push('<div class="warnbox"><b>Wichtig:</b> Dein Fortschritt wird nur in dem Browser gespeichert, in dem du übst. Er wandert nicht zwischen Handy und Computer, und er verschwindet, wenn du die Browserdaten löschst.</div>');
+  d.push('<p>Ganz unten auf der Seite gibt es <b>Fortschritt sichern</b>. Damit lädst du eine kleine Datei herunter, die deinen Lernstand enthält. Mit <b>Fortschritt laden</b> spielst du sie wieder ein — zum Beispiel auf einem anderen Gerät oder nachdem du den Cache geleert hast. Die Datei enthält keine Vokabeln, nur Zahlen.</p>');
+  d.push('<p>Wenn du auf Nummer sicher gehen willst: einmal im Monat sichern und die Datei sich selbst per Mail schicken.</p>');
+
+  d.push('<h2>Alle Vokabeln nachschlagen</h2>');
+  d.push('<p>Auf der Startseite unten steht <b>Alle Vokabeln ansehen</b>. Dort findest du:</p>');
+  d.push('<ul>');
+  d.push('<li>ein <b>Suchfeld</b> — es durchsucht Englisch, Deutsch und die Beispielsätze;</li>');
+  d.push('<li>Schalter für <b>Beispielsätze</b> und <b>Lautschrift</b>;</li>');
+  d.push('<li><b>Drucken</b> — druckt genau die Themen, die du aufgeklappt hast, zweispaltig und ohne Bedienelemente. Auf dem Handy kannst du daraus ein PDF sichern.</li>');
+  d.push('</ul>');
+
+  d.push('<h2>Wenn etwas nicht geht</h2>');
+  d.push('<h3>Kein Ton bei der Aussprache</h3>');
+  d.push('<p>Prüfe am iPhone den Stummschalter an der linken Gehäusekante. Ist er auf stumm, bleibt auch die Sprachausgabe still.</p>');
+  d.push('<h3>Der Lernstand ist weg</h3>');
+  d.push('<p>Wahrscheinlich wurden die Browserdaten gelöscht, oder du hast die Seite über eine andere Adresse geöffnet. Für den Browser sind das zwei verschiedene Orte. Nutze immer denselben Link.</p>');
+  d.push('<h3>Die Seite bleibt leer</h3>');
+  d.push('<p>Lade sie neu. Kommt danach ein gelber Kasten mit einer Fehlermeldung, gib den Text an deine Lehrkraft weiter.</p>');
+
+  d.push('<div class="teacher">');
+  d.push('<h2>Für Kolleginnen und Kollegen</h2>');
+  d.push('<p>Die Seite läuft ohne Server, ohne Konten und ohne Datenbank. Es werden keine personenbezogenen Daten erhoben oder übertragen; der Lernstand bleibt ausschließlich im Browser des Geräts.</p>');
+  d.push('<p>In der Listenansicht gibt es zusätzlich einen <b>CSV-Export</b> der gerade sichtbaren Einträge — für Arbeitsblätter, Tests oder eigene Listen. Spalten: Thema, en, de, pos, ipa, collocations, example_en.</p>');
+  d.push('<p>Alle Übersetzungen, Kollokationen und Beispielsätze sind eigenständig formuliert. Die Auswahl der Stichwörter orientiert sich an den Korridorthemen und am eingeführten Lehrwerk.</p>');
+  d.push('</div>');
+
+  view.innerHTML =
+      '<div class="sessionbar">'
+    +   '<button class="linkbtn" id="hback">\u2190 Themenübersicht</button>'
+    +   '<div class="switches"><button class="switch" id="hprint">Drucken</button></div>'
+    + '</div>'
+    + '<div class="doc">' + d.join("") + '</div>';
+
+  document.getElementById("hback").onclick = function(){ S.view = "home"; render(); };
+  document.getElementById("hprint").onclick = function(){ try{ window.print(); }catch(e){} };
+  updateFoot();
+}
+
+/* =========================================================================
    LISTENANSICHT
    Reine Anzeige: liest die Vokabeln, schreibt nichts und ruehrt den
    Lernstand nicht an. Themen sind eingeklappt; die Suche oeffnet sie.
@@ -15900,6 +16038,7 @@ function updateFoot(){
 function render(){
   if(S.view === "home") return renderHome();
   if(S.view === "list") return renderList();
+  if(S.view === "help") return renderHelp();
   return renderSession();
 }
 
