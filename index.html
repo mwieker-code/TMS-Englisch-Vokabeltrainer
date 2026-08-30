@@ -33,6 +33,14 @@ window.onerror = function(msg, src, line, col){
   --petrol:#0E5A66;
   --amber:#C9761E;
   --moss:#3F7A4B;
+  --year-e:#3C5A82;
+  --year-q1:#2E6E52;
+  --year-q2:#AC6428;
+  --year-all:#6B6358;
+  --year-e-bg:#E4EAF1;
+  --year-q1-bg:#E4EFE9;
+  --year-q2-bg:#F4E8D9;
+  --year-all-bg:#E9E7E2;
   --sans:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
   --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
   --mono:"JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace;
@@ -55,6 +63,24 @@ body{
   border-bottom:2px solid var(--ink);padding-bottom:10px;margin-bottom:28px;flex-wrap:wrap}
 .mhead-text{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;min-width:0}
 .mhead-logo{height:38px;width:auto;flex:0 0 auto;align-self:center}
+.yeargroup{border:none;background:none;margin-bottom:22px}
+.yeargroup > summary{cursor:pointer;list-style:none;display:flex;align-items:baseline;gap:12px;
+  padding-bottom:10px;margin-bottom:12px;border-bottom:2px solid currentColor}
+.yeargroup > summary::-webkit-details-marker{display:none}
+.yeargroup > summary .tag{font-family:var(--mono);font-size:12px;color:#fff;
+  padding:2px 9px;border-radius:2px}
+.yeargroup > summary .name{font-family:var(--serif);font-size:17px;font-style:italic;color:inherit}
+.yeargroup > summary .ycount{margin-left:auto;font-family:var(--mono);font-size:11px;
+  color:var(--ink-soft);letter-spacing:.04em;align-self:center}
+.yeargroup[open] > summary{margin-bottom:12px}
+.yeargroup .topic{border:none;border-left:5px solid var(--rule);border-radius:var(--r);
+  margin-bottom:8px}
+.yeargroup .topic .t-name{color:var(--ink)}
+.yeargroup .topic .t-count{color:var(--ink-soft)}
+.yeargroup .topic .t-due{font-weight:600}
+.yeargroup .minirail i{background:rgba(255,255,255,.55)}
+.yeargroup .minirail i.f{background:currentColor}
+
 @media(max-width:560px){
   .masthead{align-items:center}
   .mhead-text{gap:2px;display:block}
@@ -89,7 +115,7 @@ body{
   padding:14px 16px;color:var(--ink-soft);font-size:14px}
 
 /* ---------- Sitzung: Leitner-Schiene (Signature) ---------- */
-.rail{display:flex;gap:6px;margin-bottom:22px}
+.rail{display:flex;gap:6px;margin-bottom:22px;border-radius:6px;padding:3px;border:1px solid transparent}
 .slot{flex:1;background:var(--card);border:1px solid var(--rule);border-radius:var(--r);
   padding:7px 6px 6px;text-align:center;position:relative;transition:border-color .2s,background .2s}
 .slot .n{font-family:var(--mono);font-size:10px;color:var(--ink-soft);letter-spacing:.06em}
@@ -110,7 +136,7 @@ body{
 .vcard.deal{animation:deal .28s ease-out}
 @keyframes deal{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 
-.eyebrow{display:flex;justify-content:space-between;gap:12px;font-family:var(--mono);font-size:11px;
+.eyebrow{border-left:3px solid var(--rule);padding-left:9px;display:flex;justify-content:space-between;gap:12px;font-family:var(--mono);font-size:11px;
   letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);
   border-bottom:1px solid var(--rule);padding-bottom:8px;margin-bottom:20px}
 .prompt{font-family:var(--serif);font-size:38px;line-height:1.15;letter-spacing:-.015em;margin:0}
@@ -190,6 +216,37 @@ button.primary:hover{background:#0B4A54}
 .foot button{padding:5px 9px;font-family:var(--mono);font-size:11px}
 .warn{background:#FBF2E6;border:1px solid var(--amber);color:#8A4E12;border-radius:var(--r);
   padding:9px 12px;font-size:13px;margin-bottom:20px;line-height:1.4}
+
+/* ---------- Heute faellig ---------- */
+.dueBtn{display:block;width:100%;text-align:left;background:var(--petrol);border:1px solid var(--petrol);
+  border-left:3px solid var(--ink);border-radius:var(--r);padding:13px 15px;margin-bottom:18px;
+  cursor:pointer;font:inherit;color:#fff;transition:background .15s}
+.dueBtn:hover{background:#0B4A54}
+.dueBtn:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.dueBtn .t-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.dueBtn .t-name{font-weight:600}
+.dueBtn .t-count{font-family:var(--mono);font-size:12px;opacity:.85;white-space:nowrap}
+.dueBtn:disabled{opacity:.45;cursor:not-allowed}
+
+/* ---------- Lernstand-Code ---------- */
+.codebox{background:var(--card);border:1px solid var(--rule);border-radius:var(--r);
+  padding:18px 18px 16px;margin-bottom:12px}
+.codebox h3{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--petrol);margin:0 0 10px}
+.codeout{font-family:var(--mono);font-size:13px;word-break:break-all;background:var(--ground);
+  border:1px solid var(--rule);border-radius:var(--r);padding:10px 12px;margin:8px 0;
+  max-height:120px;overflow:auto;user-select:all;-webkit-user-select:all}
+.codein{width:100%;font-family:var(--mono);font-size:13px;padding:10px 12px;
+  border:1px solid var(--rule);border-radius:var(--r);background:var(--ground);color:var(--ink)}
+.codein:focus{outline:2px solid var(--petrol);outline-offset:1px;background:var(--card)}
+.codemsg{font-size:13px;margin-top:8px}
+.codemsg.ok{color:var(--moss)}
+.codemsg.err{color:var(--amber)}
+
+/* ---------- Schriftgroesse ---------- */
+.szctl{display:flex;align-items:center;gap:8px}
+.szctl button{padding:4px 9px;font-family:var(--mono);font-size:13px;line-height:1}
+.szctl span{font-family:var(--mono);font-size:11px;color:var(--ink-soft)}
 
 /* ---------- Anleitung ---------- */
 .doc{background:var(--card);border:1px solid var(--rule);border-radius:var(--r);
@@ -311,6 +368,11 @@ button.primary:hover{background:#0B4A54}
     <button id="exportBtn">Fortschritt sichern</button>
     <button id="importBtn">Fortschritt laden</button>
     <input type="file" id="importFile" accept="application/json" hidden>
+    <div class="szctl">
+      <button id="szDown" title="Schrift kleiner">A−</button>
+      <span id="szLabel">100%</span>
+      <button id="szUp" title="Schrift gr\u00f6\u00dfer">A+</button>
+    </div>
   </div>
   <div class="credit">Erstellt von Michael Wieker - Thomas-Mann-Schule Luebeck</div>
 </div>
@@ -442,6 +504,12 @@ const TOPICS = [
   "year": "ALL",
   "yearName": "Jahrgangsübergreifend",
   "name": "Academic & essay language"
+ },
+ {
+  "id": "linking-words",
+  "year": "ALL",
+  "yearName": "Jahrgangsübergreifend",
+  "name": "Linking words"
  }
 ];
 
@@ -11858,14 +11926,6 @@ const SETS = {
    "pos": "noun",
    "ipa": "ˈɪnfənt",
    "example_en": "Infants form categories long before they can name any of them."
-  },
-  {
-   "id": "div-43",
-   "en": "likewise",
-   "de": "ebenso, gleichfalls",
-   "pos": "adverb",
-   "ipa": "ˈlaɪkwaɪz",
-   "example_en": "Your sister is helping; you should do likewise."
   }
  ],
  "q2-gender": [
@@ -12181,14 +12241,6 @@ const SETS = {
    "pos": "adjective",
    "ipa": "ˌklɪə ˈkʌt",
    "example_en": "There is no clear-cut definition, which is why the argument continues."
-  },
-  {
-   "id": "gen-38",
-   "en": "hence",
-   "de": "daher, folglich",
-   "pos": "adverb",
-   "ipa": "hens",
-   "example_en": "The harvest was larger, hence the fall in prices."
   },
   {
    "id": "gen-39",
@@ -14688,89 +14740,6 @@ const SETS = {
    "example_en": "The poem addresses a reader who is not yet born."
   },
   {
-   "id": "aca-61",
-   "en": "however",
-   "de": "jedoch, allerdings",
-   "pos": "adverb",
-   "ipa": "haʊˈevə",
-   "example_en": "The figures rose. However, so did the population.",
-   "distractor_hint": [
-    "aca-62"
-   ]
-  },
-  {
-   "id": "aca-62",
-   "en": "nevertheless",
-   "de": "dennoch, trotzdem",
-   "pos": "adverb",
-   "ipa": "ˌnevəðəˈles",
-   "example_en": "The evidence is thin. Nevertheless, the conclusion has been repeated for years.",
-   "distractor_hint": [
-    "aca-61"
-   ]
-  },
-  {
-   "id": "aca-63",
-   "en": "furthermore",
-   "de": "außerdem, darüber hinaus",
-   "pos": "adverb",
-   "ipa": "ˌfɜːðəˈmɔː",
-   "example_en": "Furthermore, the same author had argued the opposite a decade earlier."
-  },
-  {
-   "id": "aca-64",
-   "en": "whereas",
-   "de": "während, wohingegen",
-   "pos": "conjunction",
-   "ipa": "weərˈæz",
-   "example_en": "Britain funds it centrally, whereas Germany leaves it to the states."
-  },
-  {
-   "id": "aca-65",
-   "en": "in contrast (to sth.)",
-   "de": "im Gegensatz (zu etwas)",
-   "pos": "phrase",
-   "ipa": "ˈkɒntrɑːst",
-   "example_en": "In contrast to the first study, this one followed its subjects for a decade."
-  },
-  {
-   "id": "aca-66",
-   "en": "consequently",
-   "de": "folglich",
-   "pos": "adverb",
-   "ipa": "ˈkɒnsɪkwəntli",
-   "example_en": "Consequently, the reform reached the schools two years late.",
-   "distractor_hint": [
-    "aca-67"
-   ]
-  },
-  {
-   "id": "aca-67",
-   "en": "as a result",
-   "de": "infolgedessen",
-   "pos": "phrase",
-   "example_en": "As a result, half the intended group was never contacted.",
-   "distractor_hint": [
-    "aca-66"
-   ]
-  },
-  {
-   "id": "aca-68",
-   "en": "admittedly",
-   "de": "zugegebenermaßen",
-   "pos": "adverb",
-   "ipa": "ədˈmɪtɪdli",
-   "example_en": "Admittedly, the sample was small."
-  },
-  {
-   "id": "aca-69",
-   "en": "arguably",
-   "de": "wohl, man könnte sagen",
-   "pos": "adverb",
-   "ipa": "ˈɑːɡjuəbli",
-   "example_en": "It is arguably the most influential essay of the decade."
-  },
-  {
    "id": "aca-70",
    "en": "to some extent",
    "de": "in gewissem Maße",
@@ -15209,6 +15178,840 @@ const SETS = {
    "collocations": "widespread condemnation",
    "example_en": "There was widespread condemnation and no consequence."
   }
+ ],
+ "linking-words": [
+  {
+   "id": "lnk-01",
+   "en": "however",
+   "de": "jedoch, allerdings",
+   "pos": "adverb",
+   "ipa": "haʊˈevə",
+   "example_en": "The team trained harder than ever before the final. However, they lost by a wide margin.",
+   "distractor_hint": [
+    "lnk-02",
+    "lnk-03"
+   ]
+  },
+  {
+   "id": "lnk-02",
+   "en": "nevertheless",
+   "de": "dennoch, trotzdem",
+   "pos": "adverb",
+   "ipa": "ˌnevəðəˈles",
+   "example_en": "The evidence against the theory kept piling up. Nevertheless, a few scientists refused to abandon it.",
+   "distractor_hint": [
+    "lnk-01",
+    "lnk-03"
+   ]
+  },
+  {
+   "id": "lnk-03",
+   "en": "nonetheless",
+   "de": "dennoch, nichtsdestotrotz",
+   "pos": "adverb",
+   "ipa": "ˌnʌnðəˈles",
+   "example_en": "Ticket prices had tripled since last year. Nonetheless, the stadium sold out within an hour.",
+   "distractor_hint": [
+    "lnk-01",
+    "lnk-02"
+   ]
+  },
+  {
+   "id": "lnk-04",
+   "en": "on the other hand",
+   "de": "andererseits",
+   "pos": "phrase",
+   "collocations": "on the one hand … on the other hand",
+   "example_en": "On the one hand, working from home saves commuting time. On the other hand, it can make people feel isolated.",
+   "distractor_hint": [
+    "lnk-05"
+   ]
+  },
+  {
+   "id": "lnk-05",
+   "en": "in contrast (to sth.)",
+   "de": "im Gegensatz (zu etwas)",
+   "pos": "phrase",
+   "ipa": "ˈkɒntrɑːst",
+   "example_en": "Rural areas saw house prices fall. In contrast, prices in the capital kept climbing.",
+   "distractor_hint": [
+    "lnk-06",
+    "lnk-04"
+   ]
+  },
+  {
+   "id": "lnk-06",
+   "en": "by contrast",
+   "de": "im Gegensatz dazu",
+   "pos": "phrase",
+   "ipa": "kɒntrɑːst",
+   "example_en": "The first half of the film is slow and quiet. By contrast, the second half barely pauses for breath.",
+   "distractor_hint": [
+    "lnk-05"
+   ]
+  },
+  {
+   "id": "lnk-07",
+   "en": "on the contrary",
+   "de": "ganz im Gegenteil",
+   "pos": "phrase",
+   "ipa": "ˈkɒntrəri",
+   "example_en": "He did not seem disappointed by the result. On the contrary, he looked relieved.",
+   "distractor_hint": [
+    "lnk-08"
+   ]
+  },
+  {
+   "id": "lnk-08",
+   "en": "quite the opposite",
+   "de": "ganz im Gegenteil",
+   "pos": "phrase",
+   "ipa": "ˈɒpəzɪt",
+   "example_en": "People assumed the merger would cost jobs. Quite the opposite happened: the workforce doubled.",
+   "distractor_hint": [
+    "lnk-07"
+   ]
+  },
+  {
+   "id": "lnk-09",
+   "en": "whereas",
+   "de": "während, wohingegen",
+   "pos": "conjunction",
+   "ipa": "weərˈæz",
+   "example_en": "The northern regions rely heavily on tourism, whereas the south depends on manufacturing.",
+   "distractor_hint": [
+    "lnk-10"
+   ]
+  },
+  {
+   "id": "lnk-10",
+   "en": "while",
+   "de": "während, wohingegen",
+   "pos": "conjunction",
+   "ipa": "waɪl",
+   "example_en": "While some passengers complained loudly, most simply waited in silence.",
+   "distractor_hint": [
+    "lnk-09"
+   ]
+  },
+  {
+   "id": "lnk-11",
+   "en": "despite (sth.)",
+   "de": "trotz (einer Sache)",
+   "pos": "preposition",
+   "ipa": "dɪˈspaɪt",
+   "collocations": "despite the rain",
+   "example_en": "Despite months of preparation, the launch had to be delayed at the last minute.",
+   "distractor_hint": [
+    "lnk-12"
+   ]
+  },
+  {
+   "id": "lnk-12",
+   "en": "in spite of (sth.)",
+   "de": "trotz (einer Sache)",
+   "pos": "phrase",
+   "ipa": "ɪn ˈspaɪt əv",
+   "example_en": "In spite of the warnings, hundreds of people still climbed the mountain that day.",
+   "distractor_hint": [
+    "lnk-11"
+   ]
+  },
+  {
+   "id": "lnk-13",
+   "en": "although",
+   "de": "obwohl",
+   "pos": "conjunction",
+   "ipa": "ɔːlˈðəʊ",
+   "example_en": "Although the restaurant had only opened a week earlier, it was already fully booked.",
+   "distractor_hint": [
+    "lnk-14"
+   ]
+  },
+  {
+   "id": "lnk-14",
+   "en": "even though",
+   "de": "obwohl, obgleich",
+   "pos": "conjunction",
+   "ipa": "ˈiːvn ðəʊ",
+   "example_en": "Even though she had never given a speech before, she sounded completely at ease.",
+   "distractor_hint": [
+    "lnk-13"
+   ]
+  },
+  {
+   "id": "lnk-15",
+   "en": "yet",
+   "de": "dennoch, und doch",
+   "pos": "conjunction",
+   "ipa": "jet",
+   "example_en": "The plan looked impossible on paper, yet it worked exactly as intended.",
+   "distractor_hint": [
+    "lnk-16"
+   ]
+  },
+  {
+   "id": "lnk-16",
+   "en": "still",
+   "de": "dennoch, trotzdem",
+   "pos": "adverb",
+   "ipa": "stɪl",
+   "example_en": "He knew the risks involved. Still, he decided to go ahead with the expedition.",
+   "distractor_hint": [
+    "lnk-15"
+   ]
+  },
+  {
+   "id": "lnk-17",
+   "en": "admittedly",
+   "de": "zugegebenermaßen",
+   "pos": "adverb",
+   "ipa": "ədˈmɪtɪdli",
+   "example_en": "Admittedly, the plan has its flaws, but no better alternative has been proposed so far.",
+   "distractor_hint": [
+    "lnk-18"
+   ]
+  },
+  {
+   "id": "lnk-18",
+   "en": "arguably",
+   "de": "wohl, man könnte sagen",
+   "pos": "adverb",
+   "ipa": "ˈɑːɡjuəbli",
+   "example_en": "The final chapter is, arguably, the weakest part of an otherwise excellent book.",
+   "distractor_hint": [
+    "lnk-17"
+   ]
+  },
+  {
+   "id": "lnk-19",
+   "en": "furthermore",
+   "de": "des Weiteren, außerdem",
+   "pos": "adverb",
+   "ipa": "ˈfɜːðəmɔː",
+   "example_en": "The bridge is closed for repairs until March. Furthermore, the diversion adds an extra twenty minutes.",
+   "distractor_hint": [
+    "lnk-20",
+    "lnk-21"
+   ]
+  },
+  {
+   "id": "lnk-20",
+   "en": "moreover",
+   "de": "überdies, darüber hinaus",
+   "pos": "adverb",
+   "ipa": "mɔːrˈəʊvə",
+   "example_en": "The report was published two years late. Moreover, key data had simply been left out.",
+   "distractor_hint": [
+    "lnk-19",
+    "lnk-25"
+   ]
+  },
+  {
+   "id": "lnk-21",
+   "en": "in addition (to sth.)",
+   "de": "zusätzlich (zu etwas)",
+   "pos": "phrase",
+   "ipa": "əˈdɪʃn",
+   "example_en": "In addition to the entrance fee, visitors now have to pay for parking.",
+   "distractor_hint": [
+    "lnk-22",
+    "lnk-19"
+   ]
+  },
+  {
+   "id": "lnk-22",
+   "en": "additionally",
+   "de": "zusätzlich",
+   "pos": "adverb",
+   "ipa": "əˈdɪʃənəli",
+   "example_en": "The flat comes with a small garden. Additionally, tenants have access to a shared roof terrace.",
+   "distractor_hint": [
+    "lnk-21"
+   ]
+  },
+  {
+   "id": "lnk-23",
+   "en": "besides (sth.)",
+   "de": "außerdem, abgesehen davon",
+   "pos": "preposition",
+   "ipa": "bɪˈsaɪdz",
+   "example_en": "Besides the obvious cost savings, the new system is also far more reliable.",
+   "distractor_hint": [
+    "lnk-24"
+   ]
+  },
+  {
+   "id": "lnk-24",
+   "en": "apart from (sth.)",
+   "de": "abgesehen von (etwas)",
+   "pos": "phrase",
+   "ipa": "əˈpɑːt frəm",
+   "example_en": "Apart from a few scratches, the car survived the accident remarkably well.",
+   "distractor_hint": [
+    "lnk-23"
+   ]
+  },
+  {
+   "id": "lnk-25",
+   "en": "what is more",
+   "de": "was noch hinzukommt, obendrein",
+   "pos": "phrase",
+   "example_en": "The hotel was fully booked. What is more, the only alternative was an hour's drive away.",
+   "distractor_hint": [
+    "lnk-20"
+   ]
+  },
+  {
+   "id": "lnk-26",
+   "en": "not only … but also",
+   "de": "nicht nur …, sondern auch",
+   "pos": "phrase",
+   "example_en": "The new policy is not only expensive but also unlikely to solve the problem it targets."
+  },
+  {
+   "id": "lnk-27",
+   "en": "because",
+   "de": "weil",
+   "pos": "conjunction",
+   "ipa": "bɪˈkɒz",
+   "example_en": "The match was postponed because the pitch had flooded overnight.",
+   "distractor_hint": [
+    "lnk-28"
+   ]
+  },
+  {
+   "id": "lnk-28",
+   "en": "since (reason)",
+   "de": "da, weil",
+   "pos": "conjunction",
+   "ipa": "sɪns",
+   "example_en": "Since the museum was free that day, the queue stretched around the block.",
+   "distractor_hint": [
+    "lnk-27",
+    "lnk-29"
+   ]
+  },
+  {
+   "id": "lnk-29",
+   "en": "as (reason)",
+   "de": "da, weil",
+   "pos": "conjunction",
+   "ipa": "æz",
+   "example_en": "As the deadline had already passed, the committee refused to consider the application.",
+   "distractor_hint": [
+    "lnk-28"
+   ]
+  },
+  {
+   "id": "lnk-30",
+   "en": "due to (sth.)",
+   "de": "aufgrund (einer Sache)",
+   "pos": "phrase",
+   "ipa": "djuː tə",
+   "example_en": "The flight was cancelled due to a technical fault discovered during inspection.",
+   "distractor_hint": [
+    "lnk-31"
+   ]
+  },
+  {
+   "id": "lnk-31",
+   "en": "owing to (sth.)",
+   "de": "aufgrund, wegen (einer Sache)",
+   "pos": "phrase",
+   "ipa": "ˈəʊɪŋ tə",
+   "example_en": "Owing to a shortage of staff, the library will close two hours early this week.",
+   "distractor_hint": [
+    "lnk-30"
+   ]
+  },
+  {
+   "id": "lnk-32",
+   "en": "given that",
+   "de": "angesichts der Tatsache, dass",
+   "pos": "phrase",
+   "ipa": "ˈɡɪvən ðət",
+   "example_en": "Given that the forecast predicted storms all week, the festival organisers moved the event indoors."
+  },
+  {
+   "id": "lnk-33",
+   "en": "therefore",
+   "de": "daher, deshalb",
+   "pos": "adverb",
+   "ipa": "ˈðeəfɔː",
+   "example_en": "The witness could not be located. Therefore, the trial was postponed until further notice.",
+   "distractor_hint": [
+    "lnk-34",
+    "lnk-35"
+   ]
+  },
+  {
+   "id": "lnk-34",
+   "en": "thus",
+   "de": "somit, folglich",
+   "pos": "adverb",
+   "ipa": "ðʌs",
+   "example_en": "Both parties refused to compromise, thus prolonging a dispute that had already lasted a decade.",
+   "distractor_hint": [
+    "lnk-33",
+    "lnk-35"
+   ]
+  },
+  {
+   "id": "lnk-35",
+   "en": "hence",
+   "de": "daher, folglich",
+   "pos": "adverb",
+   "ipa": "hens",
+   "example_en": "The harvest failed for the third year running, hence the sharp rise in food prices.",
+   "distractor_hint": [
+    "lnk-33",
+    "lnk-34"
+   ]
+  },
+  {
+   "id": "lnk-36",
+   "en": "consequently",
+   "de": "folglich, infolgedessen",
+   "pos": "adverb",
+   "ipa": "ˈkɒnsɪkwəntli",
+   "example_en": "The factory had ignored the safety report for months. Consequently, the fire spread far faster than it should have.",
+   "distractor_hint": [
+    "lnk-37"
+   ]
+  },
+  {
+   "id": "lnk-37",
+   "en": "as a result",
+   "de": "infolgedessen, als Ergebnis",
+   "pos": "phrase",
+   "ipa": "rɪˈzʌlt",
+   "example_en": "Two key suppliers went bankrupt last year. As a result, prices across the industry have risen sharply.",
+   "distractor_hint": [
+    "lnk-36",
+    "lnk-38"
+   ]
+  },
+  {
+   "id": "lnk-38",
+   "en": "for this reason",
+   "de": "aus diesem Grund",
+   "pos": "phrase",
+   "example_en": "The area floods almost every winter. For this reason, no new houses have been approved there since 2015.",
+   "distractor_hint": [
+    "lnk-37"
+   ]
+  },
+  {
+   "id": "lnk-39",
+   "en": "because of this",
+   "de": "deswegen, aus diesem Grund",
+   "pos": "phrase",
+   "example_en": "The bridge had not been inspected in over a decade. Because of this, engineers ordered it closed immediately.",
+   "distractor_hint": [
+    "lnk-38"
+   ]
+  },
+  {
+   "id": "lnk-40",
+   "en": "so (result)",
+   "de": "also, deshalb",
+   "pos": "conjunction",
+   "ipa": "səʊ",
+   "example_en": "The last train had already left, so they had no choice but to wait until morning."
+  },
+  {
+   "id": "lnk-41",
+   "en": "first of all",
+   "de": "zunächst einmal, zuallererst",
+   "pos": "phrase",
+   "example_en": "First of all, thank the interviewer for their time before you answer a single question.",
+   "distractor_hint": [
+    "lnk-42"
+   ]
+  },
+  {
+   "id": "lnk-42",
+   "en": "to begin with",
+   "de": "zunächst, zu Beginn",
+   "pos": "phrase",
+   "ipa": "bɪˈɡɪn wɪð",
+   "example_en": "To begin with, the plan seemed straightforward; only later did the complications appear.",
+   "distractor_hint": [
+    "lnk-41"
+   ]
+  },
+  {
+   "id": "lnk-43",
+   "en": "secondly",
+   "de": "zweitens",
+   "pos": "adverb",
+   "ipa": "ˈsekəndli",
+   "example_en": "Firstly, the design was too expensive to manufacture. Secondly, it failed every safety test."
+  },
+  {
+   "id": "lnk-44",
+   "en": "subsequently",
+   "de": "anschließend, in der Folge",
+   "pos": "adverb",
+   "ipa": "ˈsʌbsɪkwəntli",
+   "example_en": "The company denied the allegations at first. It subsequently admitted that the reports were accurate.",
+   "distractor_hint": [
+    "lnk-45"
+   ]
+  },
+  {
+   "id": "lnk-45",
+   "en": "afterwards",
+   "de": "danach, im Anschluss",
+   "pos": "adverb",
+   "ipa": "ˈɑːftəwədz",
+   "example_en": "The negotiations lasted late into the night. Afterwards, neither side would comment on what had been agreed.",
+   "distractor_hint": [
+    "lnk-44"
+   ]
+  },
+  {
+   "id": "lnk-46",
+   "en": "previously",
+   "de": "zuvor, vorher",
+   "pos": "adverb",
+   "ipa": "ˈpriːviəsli",
+   "example_en": "The building had previously served as a warehouse before it was converted into flats."
+  },
+  {
+   "id": "lnk-47",
+   "en": "meanwhile",
+   "de": "währenddessen, unterdessen",
+   "pos": "adverb",
+   "ipa": "ˈmiːnwaɪl",
+   "example_en": "The rescue team searched the eastern slope. Meanwhile, a second group approached from the valley below."
+  },
+  {
+   "id": "lnk-48",
+   "en": "eventually",
+   "de": "schließlich, letztendlich",
+   "pos": "adverb",
+   "ipa": "ɪˈventʃuəli",
+   "example_en": "The talks dragged on for three years. Eventually, both governments signed the agreement in Geneva.",
+   "distractor_hint": [
+    "lnk-49"
+   ]
+  },
+  {
+   "id": "lnk-49",
+   "en": "ultimately",
+   "de": "letztlich, im Endeffekt",
+   "pos": "adverb",
+   "ipa": "ˈʌltɪmətli",
+   "example_en": "The reviewers raised several concerns, but ultimately recommended the drug for approval.",
+   "distractor_hint": [
+    "lnk-48"
+   ]
+  },
+  {
+   "id": "lnk-50",
+   "en": "finally",
+   "de": "schließlich, zuletzt",
+   "pos": "adverb",
+   "ipa": "ˈfaɪnəli",
+   "example_en": "After four rounds of interviews, they finally offered her the position."
+  },
+  {
+   "id": "lnk-51",
+   "en": "last but not least",
+   "de": "nicht zuletzt, last but not least",
+   "pos": "phrase",
+   "example_en": "Last but not least, I would like to thank the volunteers who made this event possible."
+  },
+  {
+   "id": "lnk-52",
+   "en": "for example",
+   "de": "zum Beispiel",
+   "pos": "phrase",
+   "ipa": "ɪɡˈzɑːmpl",
+   "example_en": "Several countries have raised the retirement age; Germany, for example, did so in 2012.",
+   "distractor_hint": [
+    "lnk-53"
+   ]
+  },
+  {
+   "id": "lnk-53",
+   "en": "for instance",
+   "de": "zum Beispiel, etwa",
+   "pos": "phrase",
+   "ipa": "ˈɪnstəns",
+   "example_en": "Some habits are surprisingly hard to break. Giving up caffeine, for instance, can take months.",
+   "distractor_hint": [
+    "lnk-52"
+   ]
+  },
+  {
+   "id": "lnk-54",
+   "en": "such as",
+   "de": "wie zum Beispiel, etwa",
+   "pos": "phrase",
+   "ipa": "sʌtʃ æz",
+   "example_en": "Several European capitals, such as Vienna and Copenhagen, now offer free public transport for children.",
+   "distractor_hint": [
+    "lnk-55"
+   ]
+  },
+  {
+   "id": "lnk-55",
+   "en": "namely",
+   "de": "nämlich",
+   "pos": "adverb",
+   "ipa": "ˈneɪmli",
+   "example_en": "Only one candidate met every requirement, namely the one with a decade of teaching experience.",
+   "distractor_hint": [
+    "lnk-54"
+   ]
+  },
+  {
+   "id": "lnk-56",
+   "en": "in particular",
+   "de": "insbesondere, vor allem",
+   "pos": "phrase",
+   "ipa": "pəˈtɪkjələ",
+   "example_en": "Coastal towns, in particular, are struggling to cope with the rise in sea levels.",
+   "distractor_hint": [
+    "lnk-57"
+   ]
+  },
+  {
+   "id": "lnk-57",
+   "en": "notably",
+   "de": "insbesondere, namentlich",
+   "pos": "adverb",
+   "ipa": "ˈnəʊtəbli",
+   "example_en": "Several members raised objections, most notably the treasurer, who refused to sign the budget.",
+   "distractor_hint": [
+    "lnk-56"
+   ]
+  },
+  {
+   "id": "lnk-58",
+   "en": "in fact",
+   "de": "tatsächlich, in der Tat",
+   "pos": "phrase",
+   "ipa": "fækt",
+   "example_en": "Critics predicted the film would flop. In fact, it became the highest-grossing release of the year.",
+   "distractor_hint": [
+    "lnk-59"
+   ]
+  },
+  {
+   "id": "lnk-59",
+   "en": "indeed",
+   "de": "tatsächlich, in der Tat",
+   "pos": "adverb",
+   "ipa": "ɪnˈdiːd",
+   "example_en": "The results were surprising, and indeed several researchers asked to see the raw data again.",
+   "distractor_hint": [
+    "lnk-58"
+   ]
+  },
+  {
+   "id": "lnk-60",
+   "en": "above all",
+   "de": "vor allem, in erster Linie",
+   "pos": "phrase",
+   "ipa": "əˈbʌv ɔːl",
+   "example_en": "The programme needs more funding, more staff and, above all, more time.",
+   "distractor_hint": [
+    "lnk-61"
+   ]
+  },
+  {
+   "id": "lnk-61",
+   "en": "most importantly",
+   "de": "vor allem, am wichtigsten",
+   "pos": "phrase",
+   "ipa": "ɪmˈpɔːtntli",
+   "example_en": "The device is lighter, cheaper and, most importantly, far easier to repair.",
+   "distractor_hint": [
+    "lnk-60"
+   ]
+  },
+  {
+   "id": "lnk-62",
+   "en": "in conclusion",
+   "de": "abschließend, zusammenfassend",
+   "pos": "phrase",
+   "ipa": "kənˈkluːʒn",
+   "example_en": "In conclusion, the study found no clear link between the two factors.",
+   "distractor_hint": [
+    "lnk-63"
+   ]
+  },
+  {
+   "id": "lnk-63",
+   "en": "to sum up",
+   "de": "um es zusammenzufassen",
+   "pos": "phrase",
+   "ipa": "sʌm ʌp",
+   "example_en": "To sum up, the project met its targets but ran well over budget.",
+   "distractor_hint": [
+    "lnk-62",
+    "lnk-64"
+   ]
+  },
+  {
+   "id": "lnk-64",
+   "en": "overall",
+   "de": "insgesamt, alles in allem",
+   "pos": "adverb",
+   "ipa": "ˌəʊvərˈɔːl",
+   "example_en": "Some sessions ran late and one speaker cancelled, but overall the conference was a success.",
+   "distractor_hint": [
+    "lnk-65"
+   ]
+  },
+  {
+   "id": "lnk-65",
+   "en": "all in all",
+   "de": "alles in allem",
+   "pos": "phrase",
+   "ipa": "ɔːl ɪn ɔːl",
+   "example_en": "The weather was poor for two of the five days, but all in all it was a memorable trip.",
+   "distractor_hint": [
+    "lnk-64"
+   ]
+  },
+  {
+   "id": "lnk-66",
+   "en": "in short",
+   "de": "kurz gesagt",
+   "pos": "phrase",
+   "example_en": "The report is thorough, well argued and, in short, worth reading in full.",
+   "distractor_hint": [
+    "lnk-67"
+   ]
+  },
+  {
+   "id": "lnk-67",
+   "en": "in brief",
+   "de": "kurz gefasst",
+   "pos": "phrase",
+   "ipa": "briːf",
+   "example_en": "In brief, the committee recommends approving the plan with three minor changes.",
+   "distractor_hint": [
+    "lnk-66"
+   ]
+  },
+  {
+   "id": "lnk-68",
+   "en": "provided that",
+   "de": "vorausgesetzt, dass",
+   "pos": "conjunction",
+   "ipa": "prəˈvaɪdɪd ðət",
+   "example_en": "You may reschedule the exam, provided that you inform the office at least a week in advance.",
+   "distractor_hint": [
+    "lnk-69"
+   ]
+  },
+  {
+   "id": "lnk-69",
+   "en": "as long as",
+   "de": "solange, sofern",
+   "pos": "conjunction",
+   "ipa": "əz ˈlɒŋ æz",
+   "example_en": "Children are welcome at the event, as long as they are accompanied by an adult.",
+   "distractor_hint": [
+    "lnk-68"
+   ]
+  },
+  {
+   "id": "lnk-70",
+   "en": "unless",
+   "de": "es sei denn, sofern nicht",
+   "pos": "conjunction",
+   "ipa": "ənˈles",
+   "example_en": "The flight will not be refunded unless the airline cancels it themselves."
+  },
+  {
+   "id": "lnk-71",
+   "en": "otherwise",
+   "de": "andernfalls, sonst",
+   "pos": "adverb",
+   "ipa": "ˈʌðəwaɪz",
+   "example_en": "Please confirm your seat by Friday; otherwise it will be given to someone on the waiting list."
+  },
+  {
+   "id": "lnk-72",
+   "en": "in case (of sth.)",
+   "de": "falls, für den Fall (einer Sache)",
+   "pos": "phrase",
+   "collocations": "in case of emergency",
+   "example_en": "Keep a copy of the document at home, in case the original gets lost in the post."
+  },
+  {
+   "id": "lnk-73",
+   "en": "similarly",
+   "de": "ähnlich, in ähnlicher Weise",
+   "pos": "adverb",
+   "ipa": "ˈsɪmɪləli",
+   "example_en": "House prices fell sharply in the north of the country. Similarly, rents dropped in most rural areas.",
+   "distractor_hint": [
+    "lnk-74"
+   ]
+  },
+  {
+   "id": "lnk-74",
+   "en": "likewise (linking)",
+   "de": "ebenso, gleichermaßen",
+   "pos": "adverb",
+   "ipa": "ˈlaɪkwaɪz",
+   "example_en": "The first witness described the car as dark blue. Likewise, the second witness recalled the same colour.",
+   "distractor_hint": [
+    "lnk-73"
+   ]
+  },
+  {
+   "id": "lnk-75",
+   "en": "in the same way",
+   "de": "auf die gleiche Weise, ebenso",
+   "pos": "phrase",
+   "example_en": "Older employees were offered retraining. In the same way, new staff received a full induction programme."
+  },
+  {
+   "id": "lnk-76",
+   "en": "equally",
+   "de": "ebenso, gleichermaßen",
+   "pos": "adverb",
+   "ipa": "ˈiːkwəli",
+   "example_en": "The first draft was too long. The second version was equally difficult to follow."
+  },
+  {
+   "id": "lnk-77",
+   "en": "conversely",
+   "de": "umgekehrt",
+   "pos": "adverb",
+   "ipa": "kənˈvɜːsli",
+   "example_en": "Warmer winters mean less snowfall in the mountains. Conversely, they can bring heavier rain to the coast."
+  },
+  {
+   "id": "lnk-78",
+   "en": "in other words",
+   "de": "mit anderen Worten",
+   "pos": "phrase",
+   "ipa": "ˈʌðə wɜːdz",
+   "example_en": "The scheme is not compulsory; in other words, no one can be forced to take part.",
+   "distractor_hint": [
+    "lnk-79"
+   ]
+  },
+  {
+   "id": "lnk-79",
+   "en": "that is to say",
+   "de": "das heißt, sprich",
+   "pos": "phrase",
+   "example_en": "The measure applies only to new buildings, that is to say, anything constructed after 2020.",
+   "distractor_hint": [
+    "lnk-78"
+   ]
+  }
  ]
 };
 </script>
@@ -15411,16 +16214,26 @@ function renderHome(){
   let h = "";
   for(const y of years){
     const group = TOPICS.filter(t=>t.year===y);
-    h += `<section class="yeargroup">
-      <div class="yearhead"><span class="tag">${y}</span>
-      <span class="name">${esc(group[0].yearName)}</span></div>`;
+    const yc = yearColor(y);
+    const bg = yearBg(y);
+    const groupDue = group.reduce((n,t) => {
+      if(!SETS[t.id]) return n;
+      return n + SETS[t.id].filter(v => isDue(rec(t.id, S.dir, v.id))).length;
+    }, 0);
+    h += `<details class="yeargroup" style="color:${yc}">
+      <summary>
+        <span class="tag" style="background:${yc}">${y}</span>
+        <span class="name">${esc(group[0].yearName)}</span>
+        <span class="ycount">${group.length} Themen${groupDue ? " · " + groupDue + " fällig" : ""}</span>
+      </summary>`;
     for(const t of group){
       const total = SETS[t.id] ? SETS[t.id].length : 0;
       const due = total ? dueCount(t.id, S.dir) : 0;
       const c = total ? boxCounts(t.id, S.dir) : [0,0,0,0,0];
       const known = c[2]+c[3]+c[4];
       const filled = total ? Math.round(known/total*5) : 0;
-      h += `<button class="topic" data-topic="${t.id}" ${total?"":"disabled"}>
+      h += `<button class="topic" data-topic="${t.id}"
+          style="background:${bg};border-left-color:${yc};color:${yc}" ${total?"":"disabled"}>
         <span class="t-row">
           <span class="t-name">${esc(t.name)}</span>
           <span class="t-count">${total ? (due?`<span class="t-due">${due} fällig</span> · `:"") + total + " Vok." : "leer"}</span>
@@ -15428,11 +16241,24 @@ function renderHome(){
         <span class="minirail">${[0,1,2,3,4].map(k=>`<i class="${k<filled?"f":""}"></i>`).join("")}</span>
       </button>`;
     }
-    h += `</section>`;
+    h += `</details>`;
   }
   h += `<div class="emptyhint">Wähle ein Thema. Der Fortschritt wird pro Abfragerichtung
         (${dirLabel()}) getrennt gespeichert und bleibt auf diesem Gerät.</div>`;
   const grand = TOPICS.reduce((n,t) => n + (SETS[t.id] ? SETS[t.id].length : 0), 0);
+  const totalDue = TOPICS.reduce((n,t) => {
+    if(!SETS[t.id]) return n;
+    return n + SETS[t.id].filter(v => isDue(rec(t.id, S.dir, v.id))).length;
+  }, 0);
+  if(totalDue > 0){
+    h += `<button class="dueBtn" id="dueBtn">
+      <span class="t-row">
+        <span class="t-name">Heute f\u00e4llig</span>
+        <span class="t-count">${totalDue} Karten aus allen Themen</span>
+      </span>
+    </button>`;
+  }
+
   h += `<button class="topic" id="allBtn" style="border-left-color:var(--petrol)">
     <span class="t-row">
       <span class="t-name">Alle Vokabeln ansehen</span>
@@ -15450,6 +16276,9 @@ function renderHome(){
   view.innerHTML = h;
   view.querySelectorAll("[data-topic]").forEach(b =>
     b.addEventListener("click", () => startSession(b.dataset.topic)));
+  const db = document.getElementById("dueBtn");
+  if(db) db.onclick = () => startDueSession();
+
   const ab = document.getElementById("allBtn");
   if(ab) ab.onclick = () => { S.view = "list"; render(); };
   const hb = document.getElementById("helpBtn");
@@ -15470,7 +16299,38 @@ function buildQueue(){
 }
 function startSession(topicId){
   S.topicId = topicId; S.view = "session"; S.seen = 0;
+  S.mixedDue = false;
   buildQueue(); render();
+}
+
+/* Alle faelligen Karten aus allen Themen in eine gemischte Sitzung laden. */
+function startDueSession(){
+  var pool = [];
+  for(var i = 0; i < TOPICS.length; i++){
+    var t = TOPICS[i];
+    var es = SETS[t.id];
+    if(!es) continue;
+    for(var j = 0; j < es.length; j++){
+      var v = es[j];
+      if(isDue(rec(t.id, S.dir, v.id))){
+        pool.push({vocab: v, topicId: t.id});
+      }
+    }
+  }
+  if(!pool.length) return;
+  S.mixedDue = true;
+  S.mixedPool = shuffle(pool);
+  S.mixedI = 0;
+  S.view = "session";
+  S.seen = 0;
+  S.revealed = false;
+  S.answered = null;
+  S.options = null;
+  // Setze topicId auf das erste Element, damit die Schiene stimmt
+  S.topicId = S.mixedPool[0].topicId;
+  S.queue = S.mixedPool.map(function(x){ return x.vocab; });
+  S.i = 0;
+  render();
 }
 function current(){ return S.queue[S.i]; }
 
@@ -15485,17 +16345,20 @@ function renderSession(){
   if(S.i >= S.queue.length){ renderDone(); return; }
   const v = current();
   const r = rec(S.topicId, S.dir, v.id);
-  const topic = TOPICS.find(t=>t.id===S.topicId);
+  const tid = (S.mixedDue && S.mixedPool && S.mixedPool[S.i])
+    ? S.mixedPool[S.i].topicId : S.topicId;
+  const topic = TOPICS.find(t=>t.id===tid);
 
   const rail = [1,2,3,4,5].map(n=>{
     const cls = (n===r.box?"here":"") + (S.landed===n?" land":"");
     return `<div class="slot ${cls}"><div class="n">FACH ${n}</div>
-      <div class="c">${boxCounts(S.topicId,S.dir)[n-1]}</div>
+      <div class="c">${boxCounts(tid,S.dir)[n-1]}</div>
       <div class="iv">${n===1?"sofort":INTERVALS[n]+" d"}</div></div>`;
   }).join("");
 
-  let body = `<div class="eyebrow">
-      <span>${esc(topic.name)}</span>
+  const ycNow = yearColor(topic.year);
+  let body = `<div class="eyebrow" style="border-left-color:${ycNow}">
+      <span>${S.mixedDue ? esc(topic.year + " · " + topic.name) : esc(topic.name)}</span>
       <span>${S.i+1} / ${S.queue.length}</span>
     </div>`;
 
@@ -15571,7 +16434,7 @@ function renderSession(){
         ${S.mode==="cloze" ? "" : `<button class="switch" id="dirBtn">${dirLabel()}</button>`}
       </div>
     </div>
-    <div class="rail">${rail}</div>
+    <div class="rail" style="border-color:${ycNow}55">${rail}</div>
     <div class="stage"><div class="vcard deal">${body}</div></div>
     <div class="controls">${controls}</div>`;
 
@@ -15584,6 +16447,21 @@ function renderSession(){
 /* Zerlegt den Beispielsatz in Teil vor der Vokabel, Vokabel, Teil danach.
    Versucht zuerst die ganze Wendung, dann das erste Wort mit Endungen.
    Gibt null zurueck, wenn die Vokabel im Satz nicht auffindbar ist. */
+/* Ordnet einem Jahrgang eine feste Farbe zu. "ALL" (jahrgangsuebergreifend)
+   bekommt einen neutralen Ton statt einer der drei Jahrgangsfarben. */
+function yearColor(year){
+  if(year === "E")  return "var(--year-e)";
+  if(year === "Q1") return "var(--year-q1)";
+  if(year === "Q2") return "var(--year-q2)";
+  return "var(--year-all)";
+}
+function yearBg(year){
+  if(year === "E")  return "var(--year-e-bg)";
+  if(year === "Q1") return "var(--year-q1-bg)";
+  if(year === "Q2") return "var(--year-q2-bg)";
+  return "var(--year-all-bg)";
+}
+
 function clozeParts(v){
   var ex = v.example_en;
   if(!ex) return null;
@@ -15662,7 +16540,7 @@ function answerBlock(v, compact){
 }
 
 function bindSession(){
-  document.getElementById("back").onclick = () => { S.view="home"; S.options=null; render(); };
+  document.getElementById("back").onclick = () => { S.view="home"; S.options=null; S.mixedDue=false; render(); };
   const dirB = document.getElementById("dirBtn");
   if(dirB) dirB.onclick = () => {
     S.dir = S.dir==="en2de" ? "de2en" : "en2de";
@@ -15722,7 +16600,8 @@ function submitTyped(){
 
 function rate(quality){
   const v = current();
-  const r = rec(S.topicId, S.dir, v.id);
+  const tid = (S.mixedDue && S.mixedPool) ? S.mixedPool[S.i].topicId : S.topicId;
+  const r = rec(tid, S.dir, v.id);
   if(quality === 0)       r.box = 1;
   else if(quality === 1)  r.box = Math.max(1, r.box - 1);
   else                    r.box = Math.min(5, r.box + 1);
@@ -15746,9 +16625,10 @@ function renderDone(){
       <button id="home">Themenübersicht</button>
     </div></div>`;
   document.getElementById("again").onclick = () => {
+    if(S.mixedDue){ S.mixedDue = false; S.view = "home"; render(); return; }
     S.onlyDue = false; buildQueue(); S.seen = 0; render();
   };
-  document.getElementById("home").onclick = () => { S.view="home"; render(); };
+  document.getElementById("home").onclick = () => { S.view="home"; S.mixedDue=false; render(); };
   updateFoot();
 }
 
@@ -15766,7 +16646,7 @@ function renderHelp(){
 
   d.push('<h2>Loslegen</h2>');
   d.push('<ul>');
-  d.push('<li>Auf der Startseite ein Thema antippen.</li>');
+  d.push('<li>Auf der Startseite ein Thema antippen — oder <b>Heute fällig</b>, um alle überfälligen Karten aus allen Themen gemischt zu üben.</li>');
   d.push('<li>Die erste Karte erscheint. Überlege, dann tippe auf <b>Umdrehen</b>.</li>');
   d.push('<li>Bewerte ehrlich: <b>Nochmal</b>, <b>Unsicher</b> oder <b>Gewusst</b>.</li>');
   d.push('<li>Die nächste Karte kommt automatisch.</li>');
@@ -15818,8 +16698,8 @@ function renderHelp(){
 
   d.push('<h2>Dein Lernstand</h2>');
   d.push('<div class="warnbox"><b>Wichtig:</b> Dein Fortschritt wird nur in dem Browser gespeichert, in dem du übst. Er wandert nicht zwischen Handy und Computer, und er verschwindet, wenn du die Browserdaten löschst.</div>');
-  d.push('<p>Ganz unten auf der Seite gibt es <b>Fortschritt sichern</b>. Damit lädst du eine kleine Datei herunter, die deinen Lernstand enthält. Mit <b>Fortschritt laden</b> spielst du sie wieder ein — zum Beispiel auf einem anderen Gerät oder nachdem du den Cache geleert hast. Die Datei enthält keine Vokabeln, nur Zahlen.</p>');
-  d.push('<p>Wenn du auf Nummer sicher gehen willst: einmal im Monat sichern und die Datei sich selbst per Mail schicken.</p>');
+  d.push('<p>Ganz unten auf der Seite gibt es <b>Fortschritt sichern</b>. Du bekommst einen <b>Code</b> — eine lange Zeichenkette. Kopiere ihn und schick ihn dir selbst per Mail oder notiere ihn. Mit <b>Fortschritt laden</b> gibst du den Code auf einem anderen Gerät ein, und dein Lernstand ist wiederhergestellt.</p>');
+  d.push('<p>Alternativ kannst du beim Laden auch eine JSON-Datei verwenden, falls du eine ältere Sicherung hast.</p>');
 
   d.push('<h2>Alle Vokabeln nachschlagen</h2>');
   d.push('<p>Auf der Startseite unten steht <b>Alle Vokabeln ansehen</b>. Dort findest du:</p>');
@@ -15828,6 +16708,9 @@ function renderHelp(){
   d.push('<li>Schalter für <b>Beispielsätze</b> und <b>Lautschrift</b>;</li>');
   d.push('<li><b>Drucken</b> — druckt genau die Themen, die du aufgeklappt hast, zweispaltig und ohne Bedienelemente. Auf dem Handy kannst du daraus ein PDF sichern.</li>');
   d.push('</ul>');
+
+  d.push('<h2>Schriftgröße</h2>');
+  d.push('<p>Unten auf der Seite findest du <b>A−</b> und <b>A+</b>. Damit vergrößerst oder verkleinerst du die Schrift. Die Einstellung bleibt gespeichert.</p>');
 
   d.push('<h2>Wenn etwas nicht geht</h2>');
   d.push('<h3>Kein Ton bei der Aussprache</h3>');
@@ -15882,8 +16765,9 @@ function renderList(){
     if(!entries || !entries.length) continue;
     grand += entries.length;
 
-    h += '<details class="lsec" data-sec="' + t.id + '"><summary>'
-       + '<span><span class="lyear">' + esc(t.year) + '</span>' + esc(t.name) + '</span>'
+    var lyc = yearColor(t.year);
+    h += '<details class="lsec" data-sec="' + t.id + '" style="border-left:3px solid ' + lyc + '"><summary>'
+       + '<span><span class="lyear" style="background:' + lyc + '">' + esc(t.year) + '</span>' + esc(t.name) + '</span>'
        + '<span class="lnum">' + entries.length + '</span></summary><div class="lbody">';
 
     for(var j = 0; j < entries.length; j++){
@@ -16043,15 +16927,84 @@ document.addEventListener("keydown", e => {
 /* =========================================================================
    EXPORT / IMPORT
    ========================================================================= */
+  /* ---- Fortschritt als komprimierten Code speichern / laden ---- */
+function encodeProgress(){
+  try{
+    var j = JSON.stringify(progress);
+    // base64url-kodiert, damit der Code kopierbar ist
+    return btoa(unescape(encodeURIComponent(j)))
+      .replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+  }catch(e){ return ""; }
+}
+function decodeProgress(code){
+  try{
+    var b = String(code).trim().replace(/-/g,"+").replace(/_/g,"/");
+    while(b.length % 4) b += "=";
+    var j = decodeURIComponent(escape(atob(b)));
+    return JSON.parse(j);
+  }catch(e){ return null; }
+}
+
 document.getElementById("exportBtn").onclick = () => {
-  const blob = new Blob([JSON.stringify(progress,null,1)],{type:"application/json"});
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "vokabelfortschritt.json";
-  a.click();
-  URL.revokeObjectURL(a.href);
+  const code = encodeProgress();
+  if(!code){ alert("Kein Fortschritt vorhanden."); return; }
+  // Code in einem Overlay anzeigen
+  const existing = document.getElementById("codeOverlay");
+  if(existing){ existing.remove(); }
+  const d = document.createElement("div");
+  d.id = "codeOverlay";
+  d.innerHTML = '<div class="codebox"><h3>Dein Fortschrittscode</h3>'
+    + '<p style="font-size:13.5px;margin:0 0 6px">Kopiere diesen Code und bewahre ihn auf '
+    + '(z.\u00a0B. per Mail an dich selbst). Mit ihm kannst du deinen Lernstand auf einem '
+    + 'anderen Ger\u00e4t wiederherstellen.</p>'
+    + '<div class="codeout">' + code + '</div>'
+    + '<div class="bar">'
+    + '<button class="small" id="codeCopy">Code kopieren</button> '
+    + '<button class="small" id="codeClose">Schlie\u00dfen</button>'
+    + '</div></div>';
+  document.getElementById("view").parentNode.insertBefore(d, document.getElementById("view"));
+  document.getElementById("codeCopy").onclick = async () => {
+    try{ await navigator.clipboard.writeText(code);
+      document.getElementById("codeCopy").textContent = "Kopiert!";
+    }catch(e){
+      document.getElementById("codeCopy").textContent = "Bitte manuell markieren";
+    }
+    setTimeout(()=>{ const b = document.getElementById("codeCopy"); if(b) b.textContent = "Code kopieren"; }, 2200);
+  };
+  document.getElementById("codeClose").onclick = () => d.remove();
 };
-document.getElementById("importBtn").onclick = () => document.getElementById("importFile").click();
+
+document.getElementById("importBtn").onclick = () => {
+  const existing = document.getElementById("codeOverlay");
+  if(existing){ existing.remove(); }
+  const d = document.createElement("div");
+  d.id = "codeOverlay";
+  d.innerHTML = '<div class="codebox"><h3>Fortschritt laden</h3>'
+    + '<p style="font-size:13.5px;margin:0 0 6px">F\u00fcge deinen Fortschrittscode hier ein:</p>'
+    + '<input type="text" class="codein" id="codeIn" placeholder="Code einf\u00fcgen" autocomplete="off">'
+    + '<div class="codemsg" id="codeMsg"></div>'
+    + '<div class="bar" style="margin-top:10px">'
+    + '<button class="small primary" id="codeApply">\u00dcbernehmen</button> '
+    + '<button class="small" id="codeFile">Stattdessen Datei laden</button> '
+    + '<button class="small" id="codeClose2">Abbrechen</button>'
+    + '</div></div>';
+  document.getElementById("view").parentNode.insertBefore(d, document.getElementById("view"));
+  document.getElementById("codeApply").onclick = () => {
+    const inp = document.getElementById("codeIn");
+    const msg = document.getElementById("codeMsg");
+    const result = decodeProgress(inp.value);
+    if(!result){ msg.className = "codemsg err"; msg.textContent = "Der Code ist ung\u00fcltig oder leer."; return; }
+    progress = result; save(); render();
+    msg.className = "codemsg ok"; msg.textContent = "Lernstand wiederhergestellt!";
+    setTimeout(() => d.remove(), 1500);
+  };
+  document.getElementById("codeFile").onclick = () => {
+    d.remove();
+    document.getElementById("importFile").click();
+  };
+  document.getElementById("codeClose2").onclick = () => d.remove();
+};
+
 document.getElementById("importFile").onchange = ev => {
   const f = ev.target.files[0]; if(!f) return;
   const fr = new FileReader();
@@ -16060,6 +17013,26 @@ document.getElementById("importFile").onchange = ev => {
     catch(e){ alert("Die Datei konnte nicht gelesen werden."); }
   };
   fr.readAsText(f);
+};
+
+/* ---- Schriftgroesse ---- */
+var fontSize = 100;
+try{
+  var stored = Number(Store.get("vt:fontsize"));
+  if(stored >= 80 && stored <= 150) fontSize = stored;
+}catch(e){}
+function applyFontSize(){
+  document.querySelector(".wrap").style.fontSize = fontSize + "%";
+  var lb = document.getElementById("szLabel");
+  if(lb) lb.textContent = fontSize + "%";
+  try{ Store.set("vt:fontsize", String(fontSize)); }catch(e){}
+}
+applyFontSize();
+document.getElementById("szDown").onclick = function(){
+  fontSize = Math.max(80, fontSize - 10); applyFontSize();
+};
+document.getElementById("szUp").onclick = function(){
+  fontSize = Math.min(150, fontSize + 10); applyFontSize();
 };
 
 function updateFoot(){
